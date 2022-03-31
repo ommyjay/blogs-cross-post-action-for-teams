@@ -3,17 +3,21 @@ name: Releases
 on:
   push:
     tags:
-    - '*'
+      - '*'
 
 jobs:
-
   build:
     runs-on: ubuntu-latest
     permissions:
       contents: write
     steps:
-    - uses: actions/checkout@v2
-    - uses: ncipollo/release-action@v1
-      with:
-        artifacts: "dist"
-        token: ${{ secrets.GB_TOKEN }}
+      - uses: actions/checkout@v2
+      - name: Switch to Dist Folder
+        run: |
+          cd dist
+          ls -la
+          zip -r release.zip
+      - uses: ncipollo/release-action@v1
+        with:
+          artifacts: 'dist/release.zip'
+          token: ${{ secrets.GB_TOKEN }}
