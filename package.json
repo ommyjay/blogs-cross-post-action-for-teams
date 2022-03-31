@@ -2,7 +2,7 @@
   "name": "team-blogs-cross-post-action",
   "version": "0.0.1",
   "private": true,
-  "description": "GitHub action to easily cross post your article on dev.to, Hashnode and Medium for teams",
+  "description": "GitHub action for teams to easily cross-post blog article on dev.to, Hashnode and Medium.",
   "main": "lib/main.js",
   "scripts": {
     "build": "tsc",
@@ -26,7 +26,8 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "@actions/core": "^1.6.0"
+    "@actions/core": "^1.6.0",
+    "@actions/github": "^5.0.0"
   },
   "devDependencies": {
     "@types/node": "^17.0.23",

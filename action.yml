@@ -1,6 +1,6 @@
-name: 'Blogs Cross Post Action for Teams'
-description: 'Provide a description here'
-author: 'Your name or organization here'
+name: 'Blogs Cross-Post Action for Teams'
+description: 'GitHub action for teams to easily cross-post blog article on dev.to, Hashnode and Medium.'
+author: '@ommyjay'
 inputs:
   milliseconds: # change this
     required: true

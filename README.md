@@ -1,36 +1,18 @@
-<p align="center">
-  <a href="https://github.com/actions/typescript-action/actions"><img alt="typescript-action status" src="https://github.com/actions/typescript-action/workflows/build-test/badge.svg"></a>
-</p>
+# Blogs Cross-Post Action for Teams
 
-# Create a JavaScript Action using TypeScript
+> GitHub action for teams to easily cross-post blog article on dev.to, hashnode.com and medium.com
 
-Use this template to bootstrap the creation of a TypeScript action.:rocket:
+## Install Dependencies
 
-This template includes compilation support, tests, a validation workflow, publishing, and versioning guidance.
-
-If you are new, there's also a simpler introduction.  See the [Hello World JavaScript Action](https://github.com/actions/hello-world-javascript-action)
-
-## Create an action from this template
-
-Click the `Use this Template` and provide the new repo details for your action
-
-## Code in Main
-
-> First, you'll need to have a reasonably modern version of `node` handy. This won't work with versions older than 9, for instance.
-
-Install the dependencies
 ```bash
 $ yarn
+...
 ```
 
-Build the typescript and package it for distribution
-```bash
-$ yarn build && yarn package
-```
+## Build and Test :heavy_check_mark:
 
-Run the tests :heavy_check_mark:
 ```bash
-$ yarn test
+$ yarn all
 
  PASS  ./index.test.js
   ✓ throws invalid number (3ms)
@@ -40,66 +22,20 @@ $ yarn test
 ...
 ```
 
-## Change action.yml
+## Build, Test and Release
 
-The action.yml defines the inputs and output for your action.
-
-Update the action.yml with your name, description, inputs and outputs for your action.
-
-See the [documentation](https://help.github.com/en/articles/metadata-syntax-for-github-actions)
-
-## Change the Code
-
-Most toolkit and CI/CD operations involve async operations so the action is run in an async function.
-
-```javascript
-import * as core from '@actions/core';
-...
-
-async function run() {
-  try {
-      ...
-  }
-  catch (error) {
-    core.setFailed(error.message);
-  }
-}
-
-run()
-```
-
-See the [toolkit documentation](https://github.com/actions/toolkit/blob/master/README.md#packages) for the various packages.
-
-## Publish to a distribution branch
-
-Actions are run from GitHub repos so we will checkin the packed dist folder.
-
-Then run [ncc](https://github.com/zeit/ncc) and push the results:
 ```bash
-$ yarn package
-$ git add dist
-$ git commit -a -m "prod dependencies"
-$ git push origin releases/v1
+$ yarn release
+
+...
 ```
 
-Note: We recommend using the `--license` option for ncc, which will create a license file for all of the production node modules used in your project.
+## Usage
 
-Your action is now published! :rocket:
+You can now consume the action by referencing the v1 branch
 
-See the [versioning documentation](https://github.com/actions/toolkit/blob/master/docs/action-versioning.md)
-
-## Validate
-
-You can now validate the action by referencing `./` in a workflow in your repo (see [test.yml](.github/workflows/test.yml))
-
-```yaml
-uses: ./
+```bash
+uses: ommyjay/blogs-cross-post-action-for-teams@v1
 with:
   milliseconds: 1000
 ```
-
-See the [actions tab](https://github.com/actions/typescript-action/actions) for runs of this action! :rocket:
-
-## Usage:
-
-After testing you can [create a v1 tag](https://github.com/actions/toolkit/blob/master/docs/action-versioning.md) to reference the stable and latest V1 action
