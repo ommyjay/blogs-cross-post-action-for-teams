@@ -2,7 +2,11 @@ name: 'Blogs Cross-Post Action for Teams'
 description: 'GitHub action for teams to easily cross-post blog article on dev.to, Hashnode and Medium.'
 author: '@ommyjay'
 inputs:
-  milliseconds: # change this
+  milliseconds:
+    required: true
+    description: 'input description here'
+    default: 'default value if applicable'
+  who-to-greet:
     required: true
     description: 'input description here'
     default: 'default value if applicable'
