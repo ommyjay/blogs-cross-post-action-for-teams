@@ -29,12 +29,14 @@ jobs:
           node-version: 16.x
 
       - name: Install dependencies
-        run: yarn install --frozen-lockfile
+        run: |
+          npm i
+          npm ci
 
       - name: Rebuild the dist/ directory
         run: |
-          yarn build
-          yarn package
+          npm run build
+          npm run package
 
       - name: Compare the expected and actual dist/ directories
         run: |
