@@ -12,7 +12,7 @@
     "package": "ncc build --source-map --license licenses.txt",
     "test": "jest",
     "all": "yarn build && yarn format && yarn lint && yarn package && yarn test",
-    "release": "yarn all && echo 'Enter your commit message:' &&  read commit && git add . && git commit -m '$commit' && echo 'Enter your tag version:' && read tag && git branch -M release/$tag "
+    "release": "yarn all && echo 'Enter your commit message:' &&  read commit && git add . && git commit -m '$commit' && echo 'Enter your tag version:' && read tag && git branch -M release/$tag && git tag -a -m '$commit' '$tag' && git push -u origin release/$tag --follow-tags"
   },
   "repository": {
     "type": "git",
