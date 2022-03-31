@@ -15,5 +15,5 @@ jobs:
     - uses: actions/checkout@v2
     - uses: ncipollo/release-action@v1
       with:
-        artifacts: "dist/*"
+        artifacts: "dist/"
         token: ${{ secrets.GB_TOKEN }}
