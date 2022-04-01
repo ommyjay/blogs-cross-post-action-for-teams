@@ -191,7 +191,8 @@ function run() {
                 }
             };
             const postToDevToBlogResponse = yield devto_1.default.postToDevToBlog(devToArticleData);
-            core.setOutput('postToDevToBlogResponse', postToDevToBlogResponse);
+            core.debug(JSON.stringify(postToDevToBlogResponse, undefined, 2));
+            core.setOutput('postToDevToBlogResponse ::', postToDevToBlogResponse);
         }
         catch (error) {
             if (error instanceof Error)
