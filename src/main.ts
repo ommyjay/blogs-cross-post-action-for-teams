@@ -27,7 +27,7 @@ async function run(): Promise<void> {
     const postToDevToBlogResponse = await devTo.postToDevToBlog(
       devToArticleData
     )
-    core.debug('Output result_json:\n' + postToDevToBlogResponse)
+    core.debug(`Output result_json:\n ${postToDevToBlogResponse}`)
     core.setOutput('post_to_devto_blog_response', postToDevToBlogResponse)
   } catch (error) {
     if (error instanceof Error) core.setFailed(error.message)
