@@ -2,14 +2,31 @@ name: 'Blogs Cross-Post Action for Teams'
 description: 'GitHub action for teams to easily cross-post blog article on dev.to, Hashnode and Medium.'
 author: '@ommyjay'
 inputs:
-  milliseconds:
+  title:
     required: true
-    description: 'input description here'
-    default: 'default value if applicable'
-  who-to-greet:
+    description: 'article title'
+  body_markdown:
     required: true
-    description: 'input description here'
-    default: 'default value if applicable'
+    description: 'article body'
+  tags:
+    required: false
+    description: 'article tags (comma separated)'
+  canonical_url:
+    required: false
+    description: 'article canonical url'
+  series:
+    required: false
+    description: 'article series'
+  published:
+    required: true
+    description: 'either to published the article or not'
+    default: 'false'
+  devto_organization_id:
+    required: true
+    description: 'dev to organization blog id'
+  devto_api_key:
+    required: true
+    description: 'author dev to api key'
 runs:
   using: 'node16'
   main: 'dist/index.js'

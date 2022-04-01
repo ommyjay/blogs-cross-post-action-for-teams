@@ -179,7 +179,7 @@ function run() {
                     article: {
                         title: core.getInput('title'),
                         body_markdown: core.getInput('body_markdown'),
-                        tags: [core.getInput('tags')],
+                        tags: core.getInput('tags').split(','),
                         canonical_url: core.getInput('canonical_url'),
                         published: core.getInput('published'),
                         series: core.getInput('series'),
