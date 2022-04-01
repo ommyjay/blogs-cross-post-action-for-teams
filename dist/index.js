@@ -105,7 +105,7 @@ const devTo = {
             }
             catch (error) {
                 if (axios_1.default.isAxiosError(error)) {
-                    core.debug(`error message:  ${error.message}`);
+                    core.debug(`error message:  ${error}`);
                     return error.message;
                 }
                 else {

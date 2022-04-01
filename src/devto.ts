@@ -46,7 +46,7 @@ const devTo: DevTo = {
       return data
     } catch (error) {
       if (axios.isAxiosError(error)) {
-        core.debug(`error message:  ${error.message}`)
+        core.debug(`error message:  ${error}`)
         return error.message
       } else {
         core.debug(`unexpected error: ${error}`)
