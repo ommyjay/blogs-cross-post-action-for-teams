@@ -19,6 +19,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+      - name: Publish Articles
+        id: publish
       - uses: ./
         with:
           title: 'Testing cross-release'
@@ -29,3 +31,5 @@ jobs:
           series: 'javascript'
           devto_organization_id: ${{ secrets.DEVTO_ORGANIZATION_ID }}
           devto_api_key: ${{ secrets.DEVTO_API_KEY }}
+      - name: Get the post results
+        run: echo "postToDevToBlogResponse ${{ steps.publish.outputs.postToDevToBlogResponse }}"
