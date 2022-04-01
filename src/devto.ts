@@ -11,7 +11,7 @@ export type DevToArticleData = {
       canonical_url: string
       published: string
       series: string
-      organization_id: string
+      devto_organization_id: string
     }
   }
   config: {

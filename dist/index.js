@@ -165,26 +165,15 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const config_1 = __nccwpck_require__(88);
 const core = __importStar(__nccwpck_require__(2186));
 const github = __importStar(__nccwpck_require__(5438));
 const devto_1 = __importDefault(__nccwpck_require__(790));
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            const ms = core.getInput('milliseconds');
-            const something = config_1.GlobalConfig.something;
-            core.debug(`Waiting ${ms} milliseconds ...`);
-            core.debug(`something: ${something}`);
-            core.debug(new Date().toTimeString());
-            core.debug(new Date().toTimeString());
-            core.setOutput('time', new Date().toTimeString());
-            const nameToGreet = core.getInput('who-to-greet');
-            core.debug(`Hello ${nameToGreet}!`);
             // Get the JSON webhook payload for the event that triggered the workflow
             const payload = JSON.stringify(github.context.payload, undefined, 2);
             core.debug(`The event payload: ${payload}`);
-            core.debug(`Hello ${core.getInput('title')}!`);
             const devToArticleData = {
                 content: {
                     article: {
@@ -194,7 +183,7 @@ function run() {
                         canonical_url: core.getInput('canonical_url'),
                         published: core.getInput('published'),
                         series: core.getInput('series'),
-                        organization_id: core.getInput('organization_id')
+                        devto_organization_id: core.getInput('devto_organization_id')
                     }
                 },
                 config: {

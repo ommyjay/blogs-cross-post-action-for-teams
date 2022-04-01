@@ -1,27 +1,12 @@
-import {GlobalConfig} from './config'
 import * as core from '@actions/core'
 import * as github from '@actions/github'
 import devTo, {DevToArticleData} from './devto'
 
 async function run(): Promise<void> {
   try {
-    const ms: string = core.getInput('milliseconds')
-    const something = GlobalConfig.something
-    core.debug(`Waiting ${ms} milliseconds ...`)
-    core.debug(`something: ${something}`)
-    core.debug(new Date().toTimeString())
-    core.debug(new Date().toTimeString())
-
-    core.setOutput('time', new Date().toTimeString())
-
-    const nameToGreet = core.getInput('who-to-greet')
-    core.debug(`Hello ${nameToGreet}!`)
-
     // Get the JSON webhook payload for the event that triggered the workflow
     const payload = JSON.stringify(github.context.payload, undefined, 2)
     core.debug(`The event payload: ${payload}`)
-
-    core.debug(`Hello ${core.getInput('title')}!`)
 
     const devToArticleData: DevToArticleData = {
       content: {
@@ -32,7 +17,7 @@ async function run(): Promise<void> {
           canonical_url: core.getInput('canonical_url'),
           published: core.getInput('published'),
           series: core.getInput('series'),
-          organization_id: core.getInput('organization_id')
+          devto_organization_id: core.getInput('devto_organization_id')
         }
       },
       config: {

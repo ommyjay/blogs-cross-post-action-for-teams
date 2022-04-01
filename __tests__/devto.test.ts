@@ -13,7 +13,7 @@ test('post to dev.to', async () => {
         canonical_url: faker.internet.url(),
         published: 'false',
         series: faker.random.word(),
-        organization_id: faker.random.word()
+        devto_organization_id: faker.random.word()
       }
     },
     config: {

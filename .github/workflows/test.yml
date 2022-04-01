@@ -21,4 +21,11 @@ jobs:
       - uses: actions/checkout@v3
       - uses: ./
         with:
-          milliseconds: 1000
+          title: 'Testing cross-release'
+          body_markdown: '# Test'
+          tags: 'test'
+          canonical_url: 'https://github.com/ommyjay/blogs-cross-post-action-for-teams'
+          published: 'false'
+          series: 'javascript'
+          devto_organization_id: ${{ secrets.DEVTO_ORGANIZATION_ID }}
+          devto_api_key: ${{ secrets.DEVTO_API_KEY }}
