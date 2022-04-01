@@ -1,14 +1,15 @@
+import {GlobalConfig} from './config'
 import * as core from '@actions/core'
-import {wait} from './wait'
 import * as github from '@actions/github'
+import devTo, {DevToArticleData} from './devto'
 
 async function run(): Promise<void> {
   try {
     const ms: string = core.getInput('milliseconds')
-    core.debug(`Waiting ${ms} milliseconds ...`) // debug is only output if you set the secret `ACTIONS_STEP_DEBUG` to true
-
+    const something = GlobalConfig.something
+    core.debug(`Waiting ${ms} milliseconds ...`)
+    core.debug(`something: ${something}`)
     core.debug(new Date().toTimeString())
-    await wait(parseInt(ms, 10))
     core.debug(new Date().toTimeString())
 
     core.setOutput('time', new Date().toTimeString())
@@ -19,6 +20,29 @@ async function run(): Promise<void> {
     // Get the JSON webhook payload for the event that triggered the workflow
     const payload = JSON.stringify(github.context.payload, undefined, 2)
     core.debug(`The event payload: ${payload}`)
+
+    core.debug(`Hello ${core.getInput('title')}!`)
+
+    const devToArticleData: DevToArticleData = {
+      content: {
+        article: {
+          title: core.getInput('title'),
+          body_markdown: core.getInput('body_markdown'),
+          tags: [core.getInput('tags')],
+          canonical_url: core.getInput('canonical_url'),
+          published: core.getInput('published'),
+          series: core.getInput('series'),
+          organization_id: core.getInput('organization_id')
+        }
+      },
+      config: {
+        devToAPIKey: core.getInput('devto_api_key')
+      }
+    }
+    const postToDevToBlogResponse = await devTo.postToDevToBlog(
+      devToArticleData
+    )
+    core.setOutput('postToDevToBlogResponse', postToDevToBlogResponse)
   } catch (error) {
     if (error instanceof Error) core.setFailed(error.message)
   }
