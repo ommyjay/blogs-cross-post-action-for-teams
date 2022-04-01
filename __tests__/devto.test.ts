@@ -21,5 +21,5 @@ test('post to dev.to', async () => {
     }
   }
   jest.spyOn(devTo, 'sendPublishRequest').mockResolvedValue('')
-  await expect(devTo.postToDevToBlog(devToArticleData)).resolves.toBe(null)
+  await expect(devTo.postToDevToBlog(devToArticleData)).resolves.toBe('')
 })

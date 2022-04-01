@@ -27,10 +27,7 @@ type DevTo = {
 type PostToDevToBlogResponse = unknown
 const devTo: DevTo = {
   async postToDevToBlog(articleData: DevToArticleData): Promise<string> {
-    return new Promise(async resolve => {
-      const {data} = await devTo.sendPublishRequest(articleData)
-      resolve(data || null)
-    })
+    return await devTo.sendPublishRequest(articleData)
   },
   async sendPublishRequest(articleData: DevToArticleData) {
     try {

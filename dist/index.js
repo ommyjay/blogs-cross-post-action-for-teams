@@ -87,10 +87,7 @@ const core = __importStar(__nccwpck_require__(2186));
 const devTo = {
     postToDevToBlog(articleData) {
         return __awaiter(this, void 0, void 0, function* () {
-            return new Promise((resolve) => __awaiter(this, void 0, void 0, function* () {
-                const { data } = yield devTo.sendPublishRequest(articleData);
-                resolve(data || null);
-            }));
+            return yield devTo.sendPublishRequest(articleData);
         });
     },
     sendPublishRequest(articleData) {
