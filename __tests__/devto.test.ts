@@ -1,6 +1,6 @@
 import {expect, test, jest} from '@jest/globals'
-const {faker} = require('@faker-js/faker')
 import devTo, {DevToArticleData} from '../src/devto'
+const {faker} = require('@faker-js/faker')
 
 // posting to dev.to blog
 test('post to dev.to', async () => {
@@ -13,13 +13,16 @@ test('post to dev.to', async () => {
         canonical_url: faker.internet.url(),
         published: 'false',
         series: faker.random.word(),
-        devto_organization_id: faker.random.word()
+        organization_id: faker.random.word()
       }
     },
     config: {
-      devToAPIKey: faker.random.word()
+      devtoKey: faker.random.word(),
+      dryRun: true,
     }
   }
-  jest.spyOn(devTo, 'sendPublishRequest').mockResolvedValue('')
+  jest
+    .spyOn(devTo, 'sendPublishRequest')
+    .mockImplementation(() => Promise.resolve(''))
   await expect(devTo.postToDevToBlog(devToArticleData)).resolves.toBe('')
 })
