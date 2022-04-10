@@ -2,7 +2,6 @@ import {expect, test, jest} from '@jest/globals'
 import devTo, {DevToArticleData} from '../src/devto'
 const {faker} = require('@faker-js/faker')
 
-// posting to dev.to blog
 test('post to dev.to', async () => {
   const devToArticleData: DevToArticleData = {
     content: {
@@ -18,7 +17,7 @@ test('post to dev.to', async () => {
     },
     config: {
       devtoKey: faker.random.word(),
-      dryRun: true,
+      dryRun: true
     }
   }
   jest
