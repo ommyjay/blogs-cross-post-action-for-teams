@@ -50,6 +50,8 @@ async function run(): Promise<void> {
         postedFileNames,
         devToPrefix
       )
+
+
     core.setOutput('posted_files', postedFileNames)
     core.setOutput(
       'updated_posted_article_file_paths',
