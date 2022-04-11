@@ -42,7 +42,7 @@ test('rename-article-filename', async () => {
 test('get-devTo-Posted-article-file', async () => {
   const allArticlesSample = [
     {
-      file: 'posts/lion/test-one.md',
+      file: 'posts/test/test-one.md',
       content:
         '\n In JavaScript, functions are first-class objects, because they can have properties and methods just like any other object.\n\n 🍻 🍻 🍻 🍻 🍻\n',
       data: {
@@ -61,7 +61,7 @@ test('get-devTo-Posted-article-file', async () => {
       excerpt: ''
     },
     {
-      file: 'posts/lion/two-one.md',
+      file: 'posts/test/test-one.md',
       content:
         '\n In JavaScript, functions are first-class objects, because they can have properties and methods just like any other object.\n\n 🍻 🍻 🍻 🍻 🍻\n',
       data: {
@@ -137,7 +137,7 @@ test('get-devTo-Posted-article-file', async () => {
       allArticlesSample,
       sampleDevToBlogPostResponse
     )
-  ).resolves.toEqual(['posts/lion/test-one.md'])
+  ).resolves.toEqual(['posts/test/test-one.md'])
 })
 
 test('updated-posted-articles-file-names', async () => {
