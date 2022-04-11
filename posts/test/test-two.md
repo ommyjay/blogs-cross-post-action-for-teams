@@ -1,5 +1,5 @@
 ---
-title: Test Three
+title: Test Two
 author: 'Omar'
 tags:
   - javascript
@@ -14,6 +14,4 @@ publish_to:
   - medium
 ---
 
-## Senora Bonita
-
- 🍻 🍻 🍻 🍻 🍻
+# Test Two

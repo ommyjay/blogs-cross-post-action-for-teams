@@ -66,6 +66,26 @@ const Articles = {
         const newContent = content.replace(toReplaceRegExp, replacement);
         yield fs_extra_1.default.writeFile(file, newContent);
     }),
+    getdevToPostedArticleFile: (allArticlesFiles, postedArticleResult) => __awaiter(void 0, void 0, void 0, function* () {
+        const postedArticlesFileNames = allArticlesFiles.filter(function (articleFileData) {
+            return postedArticleResult.some(function (postResponseData) {
+                return (articleFileData === null || articleFileData === void 0 ? void 0 : articleFileData.data.title) === postResponseData.title;
+            });
+        });
+        if (postedArticlesFileNames) {
+            return postedArticlesFileNames.map(files => files === null || files === void 0 ? void 0 : files.file);
+        }
+        return null;
+    }),
+    updatedPostedArticlesFileNames: (postedArticlesPath, newFileNamePrefix) => __awaiter(void 0, void 0, void 0, function* () {
+        return yield Promise.all(postedArticlesPath.map((postedPathName) => __awaiter(void 0, void 0, void 0, function* () {
+            //eslint-disable-next-line  no-useless-escape
+            const filename = postedPathName.replace(/^.*[\\\/]/, '');
+            const fileDirectory = postedPathName.split(filename)[0];
+            const newPathName = fileDirectory + newFileNamePrefix + filename;
+            return Articles.renameArticleFileName(postedPathName, newPathName);
+        })));
+    }),
     renameArticleFileName: (oldFileName, newFileName) => __awaiter(void 0, void 0, void 0, function* () {
         yield fs_extra_1.default.rename(oldFileName, newFileName);
         return newFileName;
@@ -172,31 +192,31 @@ const devTo = {
             if (articleData.config.dryRun) {
                 return {
                     type_of: 'article',
-                    id: 1049834,
-                    title: 'Small initiative',
-                    description: 'Test',
+                    id: 1050512,
+                    title: 'Test Three',
+                    description: 'Senora Bonita   🍻 🍻 🍻 🍻 🍻',
                     readable_publish_date: null,
-                    slug: 'small-initiative-3nbl-temp-slug-9050499',
-                    path: '/clickpesa/small-initiative-3nbl-temp-slug-9050499',
-                    url: 'https://dev.to/clickpesa/small-initiative-3nbl-temp-slug-9050499',
+                    slug: 'test-three-2na-temp-slug-2158217',
+                    path: '/clickpesa/test-three-2na-temp-slug-2158217',
+                    url: 'https://dev.to/clickpesa/test-three-2na-temp-slug-2158217',
                     comments_count: 0,
                     public_reactions_count: 0,
-                    collection_id: 17563,
+                    collection_id: 17655,
                     published_timestamp: '',
                     positive_reactions_count: 0,
                     cover_image: null,
-                    social_image: 'https://dev.to/social_previews/article/1049834.png',
-                    canonical_url: 'https://github.com/ommyjay/blogs-cross-post-action-for-teams',
-                    created_at: '2022-04-09T09:17:07Z',
+                    social_image: 'https://dev.to/social_previews/article/1050512.png',
+                    canonical_url: 'https://www.example.com/posts/lion/using-js-functions-properties',
+                    created_at: '2022-04-10T07:35:18Z',
                     edited_at: null,
                     crossposted_at: null,
                     published_at: null,
                     last_comment_at: '2017-01-01T05:00:00Z',
                     reading_time_minutes: 1,
-                    tag_list: 'test',
-                    tags: ['test'],
-                    body_html: '<h1>\n  <a name="test" href="#test">\n  </a>\n  Test\n</h1>\n\n',
-                    body_markdown: '# Test',
+                    tag_list: 'javascript, functions',
+                    tags: ['javascript', 'functions'],
+                    body_html: '<h2>\n  <a name="senora-bonita" href="#senora-bonita">\n  </a>\n  Senora Bonita\n</h2>\n\n<p>🍻 🍻 🍻 🍻 🍻</p>\n\n',
+                    body_markdown: '\n## Senora Bonita\n\n 🍻 🍻 🍻 🍻 🍻\n',
                     user: {
                         name: 'Omar',
                         username: 'ommyjay',
@@ -297,30 +317,34 @@ function run() {
             const devtoKey = core.getInput('devto_api_key');
             const articlesFileLocation = core.getInput('files_location');
             core.setSecret(devtoKey);
-            const articles = yield article_1.default.getArticles(articlesFileLocation);
-            core.setOutput('formated_articles', articles[0]);
-            const promises = articles.map((article) => __awaiter(this, void 0, void 0, function* () {
+            const articlesFiles = yield article_1.default.getArticles(articlesFileLocation);
+            core.setOutput('formated_articles', articlesFiles[0]);
+            const postToDevToBlogResponse = yield Promise.all(articlesFiles.map((article) => __awaiter(this, void 0, void 0, function* () {
                 const devToArticleData = {
                     content: {
                         article: {
-                            title: article === null || article === void 0 ? void 0 : article.data.title,
+                            title: (article === null || article === void 0 ? void 0 : article.data.title) || '# Hello',
                             body_markdown: (article === null || article === void 0 ? void 0 : article.content) || '# Hello World',
-                            tags: article === null || article === void 0 ? void 0 : article.data.tags,
-                            canonical_url: article === null || article === void 0 ? void 0 : article.data.canonical_url,
+                            tags: (article === null || article === void 0 ? void 0 : article.data.tags) || [],
+                            canonical_url: (article === null || article === void 0 ? void 0 : article.data.canonical_url) || '',
                             published: core.getInput('publish'),
-                            series: article === null || article === void 0 ? void 0 : article.data.series,
-                            organization_id: article === null || article === void 0 ? void 0 : article.data.organization_id
+                            series: (article === null || article === void 0 ? void 0 : article.data.series) || '',
+                            organization_id: (article === null || article === void 0 ? void 0 : article.data.organization_id) || ''
                         }
                     },
                     config: {
                         devtoKey,
-                        dryRun: false
+                        dryRun: true
                     }
                 };
                 return devto_1.default.postToDevToBlog(devToArticleData);
-            }));
-            const postToDevToBlogResponse = yield Promise.all(promises);
+            })));
             core.debug(`Output result_json: ${postToDevToBlogResponse}`);
+            const postedFileNames = (yield article_1.default.getdevToPostedArticleFile(articlesFiles, postToDevToBlogResponse));
+            const devToPrefix = '[dev].';
+            const updatedPoestedArticlesFilePaths = yield article_1.default.updatedPostedArticlesFileNames(postedFileNames, devToPrefix);
+            core.setOutput('posted_files', postedFileNames);
+            core.setOutput('updated_posted_article_file_paths', updatedPoestedArticlesFilePaths);
             core.setOutput('post_to_devto_blog_response', postToDevToBlogResponse);
         }
         catch (error) {
