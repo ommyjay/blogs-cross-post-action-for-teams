@@ -13,6 +13,15 @@ inputs:
   devto_api_key:
     required: true
     description: 'author dev to api key'
+  devto_org_id:
+    required: true
+    description: 'devto org id'
+  ghub_token:
+    required: true
+    description: 'ghub token'
+  commiting_branch:
+    required: true
+    description: 'commiting branch'
 runs:
   using: 'node16'
   main: 'dist/index.js'
