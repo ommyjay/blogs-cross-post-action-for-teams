@@ -31,7 +31,12 @@ jobs:
         run: ls posts/**/
 
       - name: Clean up
-        run:  ls && ls posts/**/ && rm posts/test/test-three.md
+        run: ls posts/**/
+
+      - name: Remove File
+        uses: JesseTG/rm@v1.0.2
+        with:
+          path: posts/test/test-three.md
 
       - uses: stefanzweifel/git-auto-commit-action@v4
         with:
