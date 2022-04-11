@@ -24,7 +24,6 @@ jobs:
         with:
           files_location: 'posts/**/*.md'
           publish: 'false'
-          devto_organization_id: ${{ secrets.DEVTO_ORGANIZATION_ID }}
           devto_api_key: ${{ secrets.DEVTO_API_KEY }}
       - name: Get the post results
         run: echo "postToDevToBlogResponse ${{ steps.publish.outputs.post_to_devto_blog_response }}"
