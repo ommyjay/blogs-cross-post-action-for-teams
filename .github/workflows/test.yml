@@ -5,6 +5,7 @@ on: # rebuild any PRs and main branch changes
     branches:
       - main
       - 'releases/*'
+      - 'using-external-action-to-commit-changes'
 
 jobs:
   build: # make sure build/ci work properly
@@ -27,3 +28,7 @@ jobs:
           devto_api_key: ${{ secrets.DEVTO_API_KEY }}
       - name: Get updated article file names
         run: echo "${{ steps.publish.outputs.updated_posted_article_file_paths }}"
+      - uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+         commit_message: "Update posted articles files ${{ steps.publish.outputs.updated_posted_article_file_paths }}"
+         file_pattern: 'posts/**/[dev]*.md'
