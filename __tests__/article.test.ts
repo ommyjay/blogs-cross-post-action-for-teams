@@ -152,7 +152,7 @@ test('updated-posted-articles-file-names', async () => {
 })
 
 test('replace-text-in-file', async () => {
-  const file = 'posts/lion/test-one.md'
+  const file = 'posts/test/test-one.md'
   const stringToReplace = `title`
   const replaceText = `no-title`
   jest.spyOn(Articles, 'replaceTextInFile')
