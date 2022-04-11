@@ -10,6 +10,7 @@ test('main', () => {
   process.env['INPUT_FILES_LOCATION'] = 'posts/**/*.md'
   process.env['INPUT_DEVTO_ORG_ID'] = '5308'
   process.env['INPUT_GHUB_TOKEN'] = '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'
+  process.env['INPUT_COMMITING_BRANCH'] = 'commit-changed-files'
   const np = process.execPath
   const ip = path.join(__dirname, '..', 'lib', 'main.js')
   const options: cp.ExecFileSyncOptions = {

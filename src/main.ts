@@ -60,7 +60,7 @@ async function run(): Promise<void> {
     const commitName = github.context.payload.repository?.owner.name || 'Omar'
     const commitEmail =
       github.context.payload.repository?.owner.email || 'ommyjay@gmail.com'
-    const branch = github.context.payload.repository?.ref.replace('refs/heads/', '')
+    const branch = core.getInput('commiting_branch')
 
     Git.commitAndPushUpdatedArticlesFiles({
       updatedArticlesFilesPath,
