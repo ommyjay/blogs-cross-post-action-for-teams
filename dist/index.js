@@ -366,7 +366,7 @@ const article_1 = __importDefault(__nccwpck_require__(1092));
 const devto_1 = __importDefault(__nccwpck_require__(790));
 const git_1 = __importDefault(__nccwpck_require__(3374));
 function run() {
-    var _a, _b, _c, _d, _e;
+    var _a, _b, _c, _d;
     return __awaiter(this, void 0, void 0, function* () {
         try {
             // Get the JSON webhook payload for the event that triggered the workflow
@@ -403,12 +403,12 @@ function run() {
             const updatedArticlesFilesPath = yield article_1.default.updatedPostedArticlesFileNames(postedFileNames, devToPrefix);
             const githubToken = core.getInput('ghub_token');
             const repo = {
-                name: ((_a = github.context.payload.repository) === null || _a === void 0 ? void 0 : _a.name) || '',
-                user: ((_b = github.context.payload.repository) === null || _b === void 0 ? void 0 : _b.owner.name) || ''
+                name: ((_a = github.context.payload.repository) === null || _a === void 0 ? void 0 : _a.name) || 'blogs-cross-post-action-for-teams',
+                user: ((_b = github.context.payload.repository) === null || _b === void 0 ? void 0 : _b.owner.name) || 'ommyjay'
             };
             const commitName = ((_c = github.context.payload.repository) === null || _c === void 0 ? void 0 : _c.owner.name) || 'Omar';
             const commitEmail = ((_d = github.context.payload.repository) === null || _d === void 0 ? void 0 : _d.owner.email) || 'ommyjay@gmail.com';
-            const branch = (_e = github.context.payload.repository) === null || _e === void 0 ? void 0 : _e.ref.replace('refs/heads/', '');
+            const branch = core.getInput('commiting_branch');
             git_1.default.commitAndPushUpdatedArticlesFiles({
                 updatedArticlesFilesPath,
                 repo,

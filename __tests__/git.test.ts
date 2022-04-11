@@ -204,7 +204,7 @@ test('commit and push updated articles files', async () => {
       watchers_count: 0
     }
   }
-  const branch = sampleActionPayload.ref.replace('refs/heads/', '')
+  const branch = sampleActionPayload.ref?.replace('refs/heads/', '')
   const repo = {
     name: sampleActionPayload.repository.name,
     user: sampleActionPayload.repository.owner.name

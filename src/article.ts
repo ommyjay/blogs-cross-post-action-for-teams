@@ -95,7 +95,7 @@ const Articles: ArticlesI = {
     return await Promise.all(
       postedArticlesPath.map(async postedPathName => {
         //eslint-disable-next-line  no-useless-escape
-        const filename = postedPathName.replace(/^.*[\\\/]/, '')
+        const filename = postedPathName?.replace(/^.*[\\\/]/, '')
         const fileDirectory = postedPathName.split(filename)[0]
         const newPathName = fileDirectory + newFileNamePrefix + filename
         return Articles.renameArticleFileName(postedPathName, newPathName)

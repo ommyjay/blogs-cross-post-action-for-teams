@@ -1,7 +1,7 @@
 import * as core from '@actions/core'
 import * as github from '@actions/github'
 import Articles from './article'
-import devTo, { DevToArticleData } from './devto'
+import devTo, {DevToArticleData} from './devto'
 import Git from './git'
 
 async function run(): Promise<void> {
@@ -54,7 +54,9 @@ async function run(): Promise<void> {
 
     const githubToken = core.getInput('ghub_token')
     const repo = {
-      name: github.context.payload.repository?.name || 'blogs-cross-post-action-for-teams',
+      name:
+        github.context.payload.repository?.name ||
+        'blogs-cross-post-action-for-teams',
       user: github.context.payload.repository?.owner.name || 'ommyjay'
     }
     const commitName = github.context.payload.repository?.owner.name || 'Omar'
