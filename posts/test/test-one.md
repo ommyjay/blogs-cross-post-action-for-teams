@@ -14,4 +14,4 @@ publish_to:
   - medium
 ---
 
-# Test Two Cat
+# Test Two
