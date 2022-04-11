@@ -26,4 +26,4 @@ jobs:
           publish: 'false'
           devto_api_key: ${{ secrets.DEVTO_API_KEY }}
       - name: Get updated article file names
-        run: echo ${{ steps.publish.outputs.updated_posted_article_file_paths }}"
+        run: echo "${{ steps.publish.outputs.updated_posted_article_file_paths }}"
