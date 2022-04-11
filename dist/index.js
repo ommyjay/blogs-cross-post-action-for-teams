@@ -80,7 +80,7 @@ const Articles = {
     updatedPostedArticlesFileNames: (postedArticlesPath, newFileNamePrefix) => __awaiter(void 0, void 0, void 0, function* () {
         return yield Promise.all(postedArticlesPath.map((postedPathName) => __awaiter(void 0, void 0, void 0, function* () {
             //eslint-disable-next-line  no-useless-escape
-            const filename = postedPathName.replace(/^.*[\\\/]/, '');
+            const filename = postedPathName === null || postedPathName === void 0 ? void 0 : postedPathName.replace(/^.*[\\\/]/, '');
             const fileDirectory = postedPathName.split(filename)[0];
             const newPathName = fileDirectory + newFileNamePrefix + filename;
             return Articles.renameArticleFileName(postedPathName, newPathName);
@@ -268,6 +268,29 @@ exports["default"] = devTo;
 
 "use strict";
 
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -279,6 +302,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 const exec_1 = __nccwpck_require__(1514);
+const core = __importStar(__nccwpck_require__(2186));
 const commitTitle = `Update published articles files`;
 const git = (command, args, flags = []) => __awaiter(void 0, void 0, void 0, function* () { return (0, exec_1.getExecOutput)('git', [...flags, command, ...args]); });
 const getRepositoryUrl = (repository, githubToken) => `https://${githubToken}@github.com/${repository.user}/${repository.name}.git`;
@@ -305,12 +329,12 @@ const Git = {
                 ]);
             }
             else {
-                throw new Error(`Nothing to commit`);
+                core.debug(`Nothing to commit.`);
             }
         }
         catch (error) {
             if (error instanceof Error)
-                throw new Error(`Cannot commit changes: ${error.message}`);
+                core.setFailed(error.message);
         }
     })
 };
@@ -403,11 +427,12 @@ function run() {
             const updatedArticlesFilesPath = yield article_1.default.updatedPostedArticlesFileNames(postedFileNames, devToPrefix);
             const githubToken = core.getInput('ghub_token');
             const repo = {
-                name: ((_a = github.context.payload.repository) === null || _a === void 0 ? void 0 : _a.name) || 'blogs-cross-post-action-for-teams',
+                name: ((_a = github.context.payload.repository) === null || _a === void 0 ? void 0 : _a.name) ||
+                    'blogs-cross-post-action-for-teams',
                 user: ((_b = github.context.payload.repository) === null || _b === void 0 ? void 0 : _b.owner.name) || 'ommyjay'
             };
             const commitName = ((_c = github.context.payload.repository) === null || _c === void 0 ? void 0 : _c.owner.name) || 'Omar';
-            const commitEmail = ((_d = github.context.payload.repository) === null || _d === void 0 ? void 0 : _d.owner.email) || 'ommyjay@gmail.com';
+            const commitEmail = ((_d = github.context.payload.commits[0]) === null || _d === void 0 ? void 0 : _d.committer.email) || 'ommyjay@gmail.com';
             const branch = core.getInput('commiting_branch');
             git_1.default.commitAndPushUpdatedArticlesFiles({
                 updatedArticlesFilesPath,
