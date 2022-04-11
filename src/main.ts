@@ -6,7 +6,7 @@ import devTo, {DevToArticleData} from './devto'
 async function run(): Promise<void> {
   try {
     // Get the JSON webhook payload for the event that triggered the workflow
-    const payload = JSON.stringify(github.context.payload, undefined, 2)
+    //const payload = JSON.stringify(github.context.payload, undefined, 2)
    // core.debug(`The event payload: ${payload}`)
 
     const devtoKey: string = core.getInput('devto_api_key')

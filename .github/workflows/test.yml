@@ -26,4 +26,5 @@ jobs:
           publish: 'false'
           devto_api_key: ${{ secrets.DEVTO_API_KEY }}
       - name: Get the post results
-        run: echo "postToDevToBlogResponse ${{ steps.publish.outputs.post_to_devto_blog_response }}"
+      - run: ls
+      - run: echo "postToDevToBlogResponse ${{ steps.publish.outputs.post_to_devto_blog_response }}"
