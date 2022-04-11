@@ -31,7 +31,7 @@ jobs:
         run: ls posts/**/
 
       - name: Clean up
-        run: git add `git ls-files --deleted`
+        run: git rm posts/test/test-three.md
 
       - uses: stefanzweifel/git-auto-commit-action@v4
         with:
