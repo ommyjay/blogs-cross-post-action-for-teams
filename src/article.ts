@@ -9,7 +9,6 @@ export type matterArticle = {
     author: string
     tags: string[]
     excerpt: string
-    organization_id: string
     canonical_url: string
     series: string
     publish_to: string[]

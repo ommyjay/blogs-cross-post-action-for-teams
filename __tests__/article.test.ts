@@ -13,7 +13,6 @@ test('getting-articles-data', async () => {
       tags: ['dev', 'medium'],
       excerpt:
         'JavaScript functions are first-class objects, because they can have properties and methods just like any other object',
-      organization_id: '5308',
       canonical_url:
         'https://www.example.com/posts/lion/using-js-functions-properties',
       series: 'Lion',

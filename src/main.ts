@@ -1,13 +1,14 @@
 import * as core from '@actions/core'
-//import * as github from '@actions/github'
+import * as github from '@actions/github'
 import Articles from './article'
-import devTo, {DevToArticleData} from './devto'
+import devTo, { DevToArticleData } from './devto'
+import Git from './git'
 
 async function run(): Promise<void> {
   try {
     // Get the JSON webhook payload for the event that triggered the workflow
-    //const payload = JSON.stringify(github.context.payload, undefined, 2)
-   // core.debug(`The event payload: ${payload}`)
+    const payload = JSON.stringify(github.context.payload, undefined, 2)
+    core.debug(`The event payload: ${payload}`)
 
     const devtoKey: string = core.getInput('devto_api_key')
     const articlesFileLocation: string = core.getInput('files_location')
@@ -28,7 +29,7 @@ async function run(): Promise<void> {
               canonical_url: article?.data.canonical_url || '',
               published: core.getInput('publish'),
               series: article?.data.series || '',
-              organization_id: article?.data.organization_id || ''
+              organization_id: core.getInput('devto_org_id')
             }
           },
           config: {
@@ -39,23 +40,41 @@ async function run(): Promise<void> {
         return devTo.postToDevToBlog(devToArticleData)
       })
     )
-   // core.debug(`Output result_json: ${postToDevToBlogResponse}`)
+    core.debug(`Output result_json: ${postToDevToBlogResponse}`)
     const postedFileNames = (await Articles.getdevToPostedArticleFile(
       articlesFiles,
       postToDevToBlogResponse
     )) as string[]
     const devToPrefix = '[dev].'
-    const updatedPoestedArticlesFilePaths =
+    const updatedArticlesFilesPath =
       await Articles.updatedPostedArticlesFileNames(
         postedFileNames,
         devToPrefix
       )
 
+    const githubToken = core.getInput('ghub_token')
+    const repo = {
+      name: github.context.payload.repository?.name || 'blogs-cross-post-action-for-teams',
+      user: github.context.payload.repository?.owner.name || 'ommyjay'
+    }
+    const commitName = github.context.payload.repository?.owner.name || 'Omar'
+    const commitEmail =
+      github.context.payload.repository?.owner.email || 'ommyjay@gmail.com'
+    const branch = github.context.payload.repository?.ref.replace('refs/heads/', '')
+
+    Git.commitAndPushUpdatedArticlesFiles({
+      updatedArticlesFilesPath,
+      repo,
+      branch,
+      githubToken,
+      commitName,
+      commitEmail
+    })
 
     core.setOutput('posted_files', postedFileNames)
     core.setOutput(
       'updated_posted_article_file_paths',
-      updatedPoestedArticlesFilePaths
+      updatedArticlesFilesPath
     )
     core.setOutput('post_to_devto_blog_response', postToDevToBlogResponse)
   } catch (error) {

@@ -1,52 +1,83 @@
-import process from 'node:process';
-import { getExecOutput } from '@actions/exec';
+import {getExecOutput, ExecOutput} from '@actions/exec'
 
-const commitTitle = `Update published articles`;
-const commitName = process.env.GIT_COMMITTER_NAME || `blogs-cross-post bot`;
-const commitEmail =
-   process.env.GIT_COMMITTER_EMAIL || `ommyjay@gmail.com`;
-const git = (command: string, args: string[], flags: string[] = []) =>
-   getExecOutput('git', [...flags, command, ...args]);
+const commitTitle = `Update published articles files`
 
-const getRepositoryUrl = (repository: { user: string, name: string }, githubToken: string) =>
-   `https://${githubToken}@github.com/${repository.user}/${repository.name}.git`;
+const git: (
+  command: string,
+  args: string[],
+  flags?: string[]
+) => Promise<ExecOutput> = async (
+  command: string,
+  args: string[],
+  flags: string[] = []
+) => getExecOutput('git', [...flags, command, ...args])
 
-const Git = {
-   commitAndPushUpdatedArticlesFiles: async (
-      udatedArticlesFilesPath: string[],
-      repo: { user: string, name: string },
-      branch: string,
-      githubToken: string,
-      conventional = false
-   ) => {
-      try {
-         const files = udatedArticlesFilesPath.map((filePath) => filePath);
-         await git('add', files);
+const getRepositoryUrl: (
+  repository: {
+    user: string
+    name: string
+  },
+  githubToken: string
+) => string = (repository: {user: string; name: string}, githubToken: string) =>
+  `https://${githubToken}@github.com/${repository.user}/${repository.name}.git`
 
-         const status = await git('status', ['--porcelain']);
-         if (status.stdout) {
-            let commitMessage = conventional
-               ? `chore: ${commitTitle.toLowerCase()}`
-               : commitTitle;
-            commitMessage += ` [skip ci]`;
-
-            await git(
-               'commit',
-               ['-m', commitMessage],
-               ['-c', `user.name="${commitName}"`, '-c', `user.email="${commitEmail}"`]
-            );
-
-            await git('push', [
-               getRepositoryUrl(repo, githubToken),
-               `HEAD:${branch}`
-            ]);
-         } else {
-            console.log('Nothing to commit');
-         }
-      } catch (error) {
-         if (error instanceof Error) throw new Error(`Cannot commit changes: ${error.message}`);
-      }
-   }
+type commitAndPushUpdatedArticlesFilesType = {
+  updatedArticlesFilesPath: string[]
+  repo: {
+    user: string
+    name: string
+  }
+  branch: string
+  githubToken: string
+  useConventionalCommitMessage?: boolean
+  commitName: string
+  commitEmail: string
 }
 
-export default Git;
+const Git = {
+  commitAndPushUpdatedArticlesFiles: async ({
+    updatedArticlesFilesPath,
+    repo,
+    branch,
+    githubToken,
+    useConventionalCommitMessage = true,
+    commitName,
+    commitEmail
+  }: commitAndPushUpdatedArticlesFilesType) => {
+    try {
+      const files = updatedArticlesFilesPath.map(filePath => filePath)
+      await git('add', files)
+
+      const status = await git('status', ['--porcelain'])
+      if (status.stdout) {
+        let commitMessage = useConventionalCommitMessage
+          ? `chore: ${commitTitle.toLowerCase()}`
+          : commitTitle
+        commitMessage += ` [skip ci]`
+
+        await git(
+          'commit',
+          ['-m', commitMessage],
+          [
+            '-c',
+            `user.name="${commitName}"`,
+            '-c',
+            `user.email="${commitEmail}"`
+          ]
+        )
+
+        await git('push', [
+          getRepositoryUrl(repo, githubToken),
+          `HEAD:${branch}`
+        ])
+      } else {
+        throw new Error(`Nothing to commit`)
+      }
+    } catch (error) {
+      if (error instanceof Error)
+        throw new Error(`Cannot commit changes: ${error.message}`)
+    }
+  }
+}
+
+export default Git
