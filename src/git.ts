@@ -1,4 +1,5 @@
-import {getExecOutput, ExecOutput} from '@actions/exec'
+import { getExecOutput, ExecOutput } from '@actions/exec'
+import * as core from '@actions/core'
 
 const commitTitle = `Update published articles files`
 
@@ -18,8 +19,8 @@ const getRepositoryUrl: (
     name: string
   },
   githubToken: string
-) => string = (repository: {user: string; name: string}, githubToken: string) =>
-  `https://${githubToken}@github.com/${repository.user}/${repository.name}.git`
+) => string = (repository: { user: string; name: string }, githubToken: string) =>
+    `https://${githubToken}@github.com/${repository.user}/${repository.name}.git`
 
 type commitAndPushUpdatedArticlesFilesType = {
   updatedArticlesFilesPath: string[]
@@ -71,11 +72,11 @@ const Git = {
           `HEAD:${branch}`
         ])
       } else {
-        throw new Error(`Nothing to commit`)
+        core.debug(`Nothing to commit.`)
       }
     } catch (error) {
       if (error instanceof Error)
-        throw new Error(`Cannot commit changes: ${error.message}`)
+        core.setFailed(error.message)
     }
   }
 }
