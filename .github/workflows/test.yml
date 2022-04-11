@@ -36,4 +36,4 @@ jobs:
           file_pattern: posts/**/*.md
 
       - name: Clean up
-        run: ls posts/**/
+        run: git status
