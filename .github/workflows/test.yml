@@ -30,6 +30,9 @@ jobs:
       - name: Check all files in post
         run: ls posts/**/
 
+      - name: Clean up
+        run:  rm posts/test/test-three.md
+
       - uses: stefanzweifel/git-auto-commit-action@v4
         with:
           commit_message: ' 🤖 AUTOMATED: Adds posted articles files ${{ steps.publish.outputs.updated_posted_article_file_paths }}'
