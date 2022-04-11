@@ -28,7 +28,7 @@ jobs:
           devto_api_key: ${{ secrets.DEVTO_API_KEY }}
 
       - name: Check all files in post
-        run: ls posts/
+        run: ls posts/**/
 
       - uses: stefanzweifel/git-auto-commit-action@v4
         with:
