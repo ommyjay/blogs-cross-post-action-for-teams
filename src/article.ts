@@ -52,7 +52,7 @@ const Articles: ArticlesI = {
     const articles = await Promise.all(
       entries.map(Articles.getArticleContentsFromFile)
     )
-    return articles.filter(article => article !== null)
+    return articles.filter(article => article !== null && !article.file.includes(`[dev]`))
   },
   getArticleContentsFromFile: async (file: string) => {
     const content = await fs.readFile(file, 'utf-8')
