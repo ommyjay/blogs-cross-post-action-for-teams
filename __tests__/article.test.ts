@@ -151,11 +151,3 @@ test('updated-posted-articles-file-names', async () => {
   ).resolves.toEqual(['posts/test/[dev].test-file.md'])
 })
 
-test('replace-text-in-file', async () => {
-  const file = 'posts/test/test-one.md'
-  const stringToReplace = `title`
-  const replaceText = `no-title`
-  jest.spyOn(Articles, 'replaceTextInFile')
-  Articles.replaceTextInFile(file, stringToReplace, replaceText)
-  expect(Articles.replaceTextInFile).toBeCalled()
-})
