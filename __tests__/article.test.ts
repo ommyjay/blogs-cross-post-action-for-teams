@@ -150,4 +150,3 @@ test('updated-posted-articles-file-names', async () => {
     Articles.updatedPostedArticlesFileNames([path], prefix)
   ).resolves.toEqual(['posts/test/[dev].test-file.md'])
 })
-

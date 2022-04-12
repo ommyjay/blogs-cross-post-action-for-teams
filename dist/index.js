@@ -60,12 +60,6 @@ const Articles = {
         }
         return Object.assign({ file }, article);
     }),
-    replaceTextInFile: (file, stringToReplace, replacement) => __awaiter(void 0, void 0, void 0, function* () {
-        const content = yield fs_extra_1.default.readFile(file, 'utf-8');
-        const toReplaceRegExp = new RegExp(stringToReplace, 'g');
-        const newContent = content.replace(toReplaceRegExp, replacement);
-        yield fs_extra_1.default.writeFile(file, newContent);
-    }),
     getdevToPostedArticleFile: (allArticlesFiles, postedArticleResult) => __awaiter(void 0, void 0, void 0, function* () {
         const postedArticlesFileNames = allArticlesFiles.filter(function (articleFileData) {
             return postedArticleResult.some(function (postResponseData) {
