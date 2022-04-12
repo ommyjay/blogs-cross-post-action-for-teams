@@ -27,11 +27,6 @@ export type matterArticle = {
 export type ArticlesI = {
   getArticles: (filesGlob: string) => Promise<matterArticle[]>
   getArticleContentsFromFile: (file: string) => Promise<matterArticle>
-  replaceTextInFile: (
-    file: string,
-    stringToReplace: string,
-    replacement: string
-  ) => Promise<void>
   getdevToPostedArticleFile: (
     allArticlesFiles: matterArticle[],
     postedArticleResult: PostToDevToBlogResponse[]
@@ -52,7 +47,9 @@ const Articles: ArticlesI = {
     const articles = await Promise.all(
       entries.map(Articles.getArticleContentsFromFile)
     )
-    return articles.filter(article => article !== null)
+    return articles.filter(
+      article => article !== null && !article.file.includes(`[dev]`)
+    )
   },
   getArticleContentsFromFile: async (file: string) => {
     const content = await fs.readFile(file, 'utf-8')
@@ -62,16 +59,6 @@ const Articles: ArticlesI = {
       return null
     }
     return {file, ...article} as unknown as matterArticle
-  },
-  replaceTextInFile: async (
-    file: string,
-    stringToReplace: string,
-    replacement: string
-  ) => {
-    const content = await fs.readFile(file, 'utf-8')
-    const toReplaceRegExp = new RegExp(stringToReplace, 'g')
-    const newContent = content.replace(toReplaceRegExp, replacement)
-    await fs.writeFile(file, newContent)
   },
   getdevToPostedArticleFile: async (
     allArticlesFiles: matterArticle[],

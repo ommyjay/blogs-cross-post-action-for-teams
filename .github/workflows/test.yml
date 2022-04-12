@@ -5,7 +5,7 @@ on: # rebuild any PRs and main branch changes
     branches:
       - main
       - 'releases/*'
-      - 'using-external-action-to-commit-changes'
+      - 'handle-already-posted-article-files'
 
 jobs:
   build: # make sure build/ci work properly
@@ -28,10 +28,10 @@ jobs:
           devto_api_key: ${{ secrets.DEVTO_API_KEY }}
 
       - name: Clean up changed files
-        run: git rm `git ls-files --deleted`
+        run: git rm `git ls-files --deleted` || exit 0;
 
       - name: Commit new files
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
-          commit_message: ' 🤖 AUTOMATED: Adds posted articles files ${{ steps.publish.outputs.updated_posted_article_file_paths }}'
+          commit_message: '⚙️ AUTOMATED: Add posted articles files ${{ steps.publish.outputs.updated_posted_article_file_paths }}'
           file_pattern: posts/**/*.md

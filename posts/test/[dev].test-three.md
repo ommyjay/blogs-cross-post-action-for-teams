@@ -1,5 +1,5 @@
 ---
-no-title: Test One
+title: Test Three
 author: 'Omar'
 tags:
   - javascript
