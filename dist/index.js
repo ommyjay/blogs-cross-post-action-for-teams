@@ -291,7 +291,10 @@ const Hashnode = {
             const hashnodePrefix = '[hashnode].';
             if (articleData.config.dryRun) {
                 core.debug(articleData.config.localFilePath);
-                yield article_1.default.updatedPostedArticlesFileNames([articleData.config.localFilePath], hashnodePrefix);
+                /* await Articles.updatedPostedArticlesFileNames(
+                  [articleData.config.localFilePath],
+                  hashnodePrefix
+                ) */
                 return exports.sampleHashnodePostResponse;
             }
             try {
@@ -303,7 +306,7 @@ const Hashnode = {
                         'Content-Type': 'application/json'
                     }
                 });
-                core.debug(`response status is:  ${status}`);
+                core.debug(`sendPublishRequest response status is:  ${status}`);
                 yield article_1.default.updatedPostedArticlesFileNames([articleData.config.localFilePath], hashnodePrefix);
                 return Object.assign(Object.assign({}, data), { updated_article_file_name: articleData.config.localFilePath });
             }
@@ -335,7 +338,7 @@ const Hashnode = {
                         'Content-Type': 'application/json'
                     }
                 });
-                core.debug(`response status is:  ${status}`);
+                core.debug(`getAuthorsTags response status is:  ${status}`);
                 return data.data.tagCategories.filter(category => getTagsData.requiredTags.includes(category.slug));
             }
             catch (error) {
