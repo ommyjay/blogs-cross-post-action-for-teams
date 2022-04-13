@@ -1,7 +1,6 @@
 import * as fg from 'fast-glob'
 import fs from 'fs-extra'
 import matter from 'gray-matter'
-import {PostToDevToBlogResponse} from './devto'
 
 export type matterArticle = {
   data: {
@@ -24,13 +23,9 @@ export type matterArticle = {
   stringify?: string
 } | null
 
-export type ArticlesI = {
+export type ArticlesType = {
   getArticles: (filesGlob: string) => Promise<matterArticle[]>
   getArticleContentsFromFile: (file: string) => Promise<matterArticle>
-  getdevToPostedArticleFile: (
-    allArticlesFiles: matterArticle[],
-    postedArticleResult: PostToDevToBlogResponse[]
-  ) => Promise<(string | undefined)[] | null>
   updatedPostedArticlesFileNames: (
     postedArticlesPath: string[],
     newFileNamePrefix: string
@@ -41,15 +36,13 @@ export type ArticlesI = {
   ) => Promise<string>
 }
 
-const Articles: ArticlesI = {
+const Articles: ArticlesType = {
   getArticles: async (filesGlob: string) => {
     const entries = fg.sync(filesGlob, {dot: true})
     const articles = await Promise.all(
       entries.map(Articles.getArticleContentsFromFile)
     )
-    return articles.filter(
-      article => article !== null && !article.file.includes(`[dev]`)
-    )
+    return articles.filter(article => article !== null)
   },
   getArticleContentsFromFile: async (file: string) => {
     const content = await fs.readFile(file, 'utf-8')
@@ -59,22 +52,6 @@ const Articles: ArticlesI = {
       return null
     }
     return {file, ...article} as unknown as matterArticle
-  },
-  getdevToPostedArticleFile: async (
-    allArticlesFiles: matterArticle[],
-    postedArticleResult: PostToDevToBlogResponse[]
-  ) => {
-    const postedArticlesFileNames = allArticlesFiles.filter(function (
-      articleFileData
-    ) {
-      return postedArticleResult.some(function (postResponseData) {
-        return articleFileData?.data.title === postResponseData.title
-      })
-    })
-    if (postedArticlesFileNames) {
-      return postedArticlesFileNames.map(files => files?.file)
-    }
-    return null
   },
   updatedPostedArticlesFileNames: async (
     postedArticlesPath: string[],
