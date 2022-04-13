@@ -2,6 +2,7 @@ import * as core from '@actions/core'
 //import * as github from '@actions/github'
 import Articles, {matterArticle} from './article'
 import devTo, {DevToArticleData} from './devto'
+import Hashnode, {HashnodeArticleData} from './hashnode'
 import Medium, {MediumArticleData} from './medium'
 
 async function run(): Promise<void> {
@@ -14,6 +15,8 @@ async function run(): Promise<void> {
     const devtoOrgId: string = core.getInput('devto_org_id')
     const mediumBlogId: string = core.getInput('medium_blog_id')
     const mediumKey: string = core.getInput('medium_api_key')
+    const hashnodeKey: string = core.getInput('hashnode_api_key')
+    const hashnodeBlogId: string = core.getInput('hashnode_blog_id')
     const dryRun: boolean = core.getInput('dry_run') === 'true'
     const publish: boolean = core.getInput('publish') === 'true'
 
@@ -70,6 +73,36 @@ async function run(): Promise<void> {
       })
     )
 
+    const {hashnodeArticles} = await getHashnodeArticles()
+    const postHashnodeBlogResponse = await Promise.all(
+      hashnodeArticles.map(async article => {
+        const hashnodeArticleData: HashnodeArticleData = {
+          content: {
+            variables: {
+              input: {
+                title: article?.data.title || '# Hello',
+                contentMarkdown: article?.content || '# Hello World',
+                tags:
+                  (await Hashnode.getAuthorsTags({
+                    requiredTags: article?.data.tags || [],
+                    config: {
+                      hashnodeKey
+                    }
+                  })) || []
+              },
+              publicationId: hashnodeBlogId
+            }
+          },
+          config: {
+            hashnodeKey,
+            dryRun,
+            localFilePath: article?.file || ''
+          }
+        }
+        return Hashnode.postToHashnodeBlog(hashnodeArticleData)
+      })
+    )
+
     core.debug(
       `post_to_devto_blog_response:: ${JSON.stringify(
         postToDevToBlogResponse,
@@ -85,6 +118,14 @@ async function run(): Promise<void> {
       )}`
     )
 
+    core.debug(
+      `post_to_medium_blog_response:: ${JSON.stringify(
+        postHashnodeBlogResponse,
+        undefined,
+        2
+      )}`
+    )
+
     core.setOutput(
       'posted_articles',
       [
@@ -92,6 +133,9 @@ async function run(): Promise<void> {
           article => article?.updated_article_file_name
         ),
         ...postMediumBlogResponse.map(
+          article => article?.updated_article_file_name
+        ),
+        ...postHashnodeBlogResponse.map(
           article => article?.updated_article_file_name
         )
       ].join(', ')
@@ -119,4 +163,15 @@ async function getMediumArticles(): Promise<{mediumArticles: matterArticle[]}> {
     articles?.data.publish_to.includes('medium')
   )
   return {mediumArticles}
+}
+
+async function getHashnodeArticles(): Promise<{
+  hashnodeArticles: matterArticle[]
+}> {
+  const articlesFileLocation: string = core.getInput('files_location')
+  const articlesFiles = await Articles.getArticles(articlesFileLocation)
+  const hashnodeArticles = articlesFiles.filter(articles =>
+    articles?.data.publish_to.includes('hashnode')
+  )
+  return {hashnodeArticles}
 }

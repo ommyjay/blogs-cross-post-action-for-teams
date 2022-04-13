@@ -5,7 +5,7 @@ on: # rebuild any PRs and main branch changes
     branches:
       - main
       - 'releases/*'
-      - 'post-to-medium-blog'
+      - 'post-to-hashnode-blog'
 
 jobs:
   build: # make sure build/ci work properly
@@ -30,6 +30,8 @@ jobs:
           medium_api_key: ${{ secrets.MEDIUM_API_KEY }}
           devto_org_id: ${{ secrets.DEVTO_ORG_ID }}
           medium_blog_id: ${{ secrets.MEDIUM_BLOG_ID}}
+          hashnode_api_key: ${{ secrets.HASHNODE_API_KEY }}
+          hashnode_blog_id: ${{ secrets.HASHNODE_BLOG_ID }}
 
       - name: Clean up changed files
         run: git rm `git ls-files --deleted` || exit 0;
@@ -39,3 +41,5 @@ jobs:
         with:
           commit_message: '⚙️ AUTOMATED: Add posted articles files ${{ steps.cross_post.outputs.posted_articles }}'
           file_pattern: posts/**/*.md
+          commit_user_name: ClickPesa-Bot
+          commit_user_email: '103582747+ClickPesa-Bot@users.noreply.github.com'
