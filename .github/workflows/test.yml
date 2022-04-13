@@ -41,3 +41,5 @@ jobs:
         with:
           commit_message: '⚙️ AUTOMATED: Add posted articles files ${{ steps.cross_post.outputs.posted_articles }}'
           file_pattern: posts/**/*.md
+          commit_user_name: ClickPesa-Bot
+          commit_user_email: '103582747+ClickPesa-Bot@users.noreply.github.com'

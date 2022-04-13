@@ -36,6 +36,27 @@ You can now consume the action by referencing the v1 branch
 
 ```bash
 uses: ommyjay/blogs-cross-post-action-for-teams@v1
+id: cross_post
 with:
-  milliseconds: 1000
+  files_location: 'posts/**/*.md'
+  dry_run: 'true'
+  publish: 'false'
+  devto_api_key: ${{ secrets.DEVTO_API_KEY }}
+  medium_api_key: ${{ secrets.MEDIUM_API_KEY }}
+  devto_org_id: ${{ secrets.DEVTO_ORG_ID }}
+  medium_blog_id: ${{ secrets.MEDIUM_BLOG_ID}}
+  hashnode_api_key: ${{ secrets.HASHNODE_API_KEY }}
+  hashnode_blog_id: ${{ secrets.HASHNODE_BLOG_ID }}
+
+- name: Clean up changed files
+  run: git rm `git ls-files --deleted` || exit 0;
+
+- name: Commit new files
+  uses: stefanzweifel/git-auto-commit-action@v4
+  with:
+    commit_message: '⚙️ AUTOMATED: Add posted articles files ${{ steps.cross_post.outputs.posted_articles }}'
+    file_pattern: posts/**/*.md
+    commit_user_name: ClickPesa-Bot
+    commit_user_email: '103582747+ClickPesa-Bot@users.noreply.github.com'
+
 ```
