@@ -88,7 +88,8 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.GlobalConfig = void 0;
 exports.GlobalConfig = {
     devToBaseURL: 'https://dev.to/api/articles',
-    mediumBaseURL: 'https://api.medium.com/v1'
+    mediumBaseURL: 'https://api.medium.com/v1',
+    hashnodeBaseURL: 'https://api.hashnode.com'
 };
 
 
@@ -194,6 +195,165 @@ exports["default"] = devTo;
 
 /***/ }),
 
+/***/ 2224:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.sampleGetAuthorCategoriesResponse = exports.sampleHashnodePostResponse = void 0;
+const config_1 = __nccwpck_require__(88);
+const axios_1 = __importDefault(__nccwpck_require__(6545));
+const core = __importStar(__nccwpck_require__(2186));
+const article_1 = __importDefault(__nccwpck_require__(1092));
+exports.sampleHashnodePostResponse = {
+    data: {
+        createPublicationStory: {
+            message: 'publication story created successfully',
+            post: {
+                slug: 'using-js-functions-properties-in-real-life',
+                title: 'Test three'
+            }
+        }
+    },
+    updated_article_file_name: 'post/path/to/hashnode-post.md'
+};
+exports.sampleGetAuthorCategoriesResponse = {
+    data: {
+        tagCategories: [
+            {
+                _id: '56744721958ef13879b94cad',
+                name: 'JavaScript',
+                slug: 'javascript'
+            },
+            {
+                _id: '56744723958ef13879b95434',
+                name: 'React',
+                slug: 'reactjs'
+            },
+            {
+                _id: '56744723958ef13879b9549b',
+                slug: 'testing',
+                name: 'Testing'
+            }
+        ]
+    }
+};
+const Hashnode = {
+    postToHashnodeBlog(articleData) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield Hashnode.sendPublishRequest(articleData);
+        });
+    },
+    sendPublishRequest(articleData) {
+        var _a;
+        return __awaiter(this, void 0, void 0, function* () {
+            if (articleData.config.localFilePath.includes('[hashnode]')) {
+                core.debug(`Article already posted!`);
+                return;
+            }
+            core.debug(`hashnode article data:: ${JSON.stringify(articleData)}`);
+            const hashnodePrefix = '[hashnode].';
+            if (articleData.config.dryRun) {
+                core.debug(articleData.config.localFilePath);
+                yield article_1.default.updatedPostedArticlesFileNames([articleData.config.localFilePath], hashnodePrefix);
+                return exports.sampleHashnodePostResponse;
+            }
+            try {
+                const { data, status } = yield axios_1.default.post(`${config_1.GlobalConfig.hashnodeBaseURL}`, Object.assign(Object.assign({}, articleData.content), { query: `mutation createPublicationStory($input: CreateStoryInput! $publicationId: String!){
+           createPublicationStory(input: $input,publicationId: $publicationId )
+           { code success message } }` }), {
+                    headers: {
+                        Authorization: `${articleData.config.hashnodeKey}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+                core.debug(`response status is:  ${status}`);
+                yield article_1.default.updatedPostedArticlesFileNames([articleData.config.localFilePath], hashnodePrefix);
+                return Object.assign(Object.assign({}, data), { updated_article_file_name: articleData.config.localFilePath });
+            }
+            catch (error) {
+                if (axios_1.default.isAxiosError(error)) {
+                    core.debug(`error message:  ${JSON.stringify((_a = error === null || error === void 0 ? void 0 : error.response) === null || _a === void 0 ? void 0 : _a.data)}`);
+                }
+                else {
+                    core.debug(`unexpected error: ${error}`);
+                }
+            }
+        });
+    },
+    getAuthorsTags(getTagsData) {
+        var _a;
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const { data, status } = yield axios_1.default.post(`${config_1.GlobalConfig.hashnodeBaseURL}`, {
+                    query: `query{
+              tagCategories{
+                _id
+                name
+                slug
+              }
+            }`
+                }, {
+                    headers: {
+                        Authorization: `${getTagsData.config.hashnodeKey}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+                core.debug(`response status is:  ${status}`);
+                return data.data.tagCategories.filter(category => getTagsData.requiredTags.includes(category.slug));
+            }
+            catch (error) {
+                if (axios_1.default.isAxiosError(error)) {
+                    core.debug(`error message:  ${JSON.stringify((_a = error === null || error === void 0 ? void 0 : error.response) === null || _a === void 0 ? void 0 : _a.data)}`);
+                }
+                else {
+                    core.debug(`unexpected error: ${error}`);
+                }
+            }
+        });
+    }
+};
+exports["default"] = Hashnode;
+
+
+/***/ }),
+
 /***/ 3109:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
@@ -239,6 +399,7 @@ const core = __importStar(__nccwpck_require__(2186));
 //import * as github from '@actions/github'
 const article_1 = __importDefault(__nccwpck_require__(1092));
 const devto_1 = __importDefault(__nccwpck_require__(790));
+const hashnode_1 = __importDefault(__nccwpck_require__(2224));
 const medium_1 = __importDefault(__nccwpck_require__(2355));
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
@@ -250,6 +411,8 @@ function run() {
             const devtoOrgId = core.getInput('devto_org_id');
             const mediumBlogId = core.getInput('medium_blog_id');
             const mediumKey = core.getInput('medium_api_key');
+            const hashnodeKey = core.getInput('hashnode_api_key');
+            const hashnodeBlogId = core.getInput('hashnode_blog_id');
             const dryRun = core.getInput('dry_run') === 'true';
             const publish = core.getInput('publish') === 'true';
             core.setSecret(devtoKey);
@@ -291,11 +454,39 @@ function run() {
                 };
                 return medium_1.default.postToMediumBlog(mediumArticleData);
             })));
+            const { hashnodeArticles } = yield getHashnodeArticles();
+            const postHashnodeBlogResponse = yield Promise.all(hashnodeArticles.map((article) => __awaiter(this, void 0, void 0, function* () {
+                const hashnodeArticleData = {
+                    content: {
+                        variables: {
+                            input: {
+                                title: (article === null || article === void 0 ? void 0 : article.data.title) || '# Hello',
+                                contentMarkdown: (article === null || article === void 0 ? void 0 : article.content) || '# Hello World',
+                                tags: (yield hashnode_1.default.getAuthorsTags({
+                                    requiredTags: (article === null || article === void 0 ? void 0 : article.data.tags) || [],
+                                    config: {
+                                        hashnodeKey
+                                    }
+                                })) || []
+                            },
+                            publicationId: hashnodeBlogId
+                        }
+                    },
+                    config: {
+                        hashnodeKey,
+                        dryRun,
+                        localFilePath: (article === null || article === void 0 ? void 0 : article.file) || ''
+                    }
+                };
+                return hashnode_1.default.postToHashnodeBlog(hashnodeArticleData);
+            })));
             core.debug(`post_to_devto_blog_response:: ${JSON.stringify(postToDevToBlogResponse, undefined, 2)}`);
             core.debug(`post_to_medium_blog_response:: ${JSON.stringify(postMediumBlogResponse, undefined, 2)}`);
+            core.debug(`post_to_medium_blog_response:: ${JSON.stringify(postHashnodeBlogResponse, undefined, 2)}`);
             core.setOutput('posted_articles', [
                 ...postToDevToBlogResponse.map(article => article === null || article === void 0 ? void 0 : article.updated_article_file_name),
-                ...postMediumBlogResponse.map(article => article === null || article === void 0 ? void 0 : article.updated_article_file_name)
+                ...postMediumBlogResponse.map(article => article === null || article === void 0 ? void 0 : article.updated_article_file_name),
+                ...postHashnodeBlogResponse.map(article => article === null || article === void 0 ? void 0 : article.updated_article_file_name)
             ].join(', '));
         }
         catch (error) {
@@ -319,6 +510,14 @@ function getMediumArticles() {
         const articlesFiles = yield article_1.default.getArticles(articlesFileLocation);
         const mediumArticles = articlesFiles.filter(articles => articles === null || articles === void 0 ? void 0 : articles.data.publish_to.includes('medium'));
         return { mediumArticles };
+    });
+}
+function getHashnodeArticles() {
+    return __awaiter(this, void 0, void 0, function* () {
+        const articlesFileLocation = core.getInput('files_location');
+        const articlesFiles = yield article_1.default.getArticles(articlesFileLocation);
+        const hashnodeArticles = articlesFiles.filter(articles => articles === null || articles === void 0 ? void 0 : articles.data.publish_to.includes('hashnode'));
+        return { hashnodeArticles };
     });
 }
 

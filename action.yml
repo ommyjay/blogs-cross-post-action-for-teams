@@ -26,7 +26,12 @@ inputs:
   medium_blog_id:
     required: true
     description: 'medium blog id'
-
+  hashnode_api_key:
+    required: true
+    description: 'author hashnode api key'
+  hashnode_blog_id:
+    required: true
+    description: 'hashnode blog id'
 runs:
   using: 'node16'
   main: 'dist/index.js'
