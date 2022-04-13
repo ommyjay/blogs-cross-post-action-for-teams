@@ -9,6 +9,7 @@ canonical_url: 'https://www.example.com/posts/lion/using-js-functions-properties
 series: 'Lion'
 publish_to:
   - hashnode
+  - medium
 ---
 
 # Test Two
