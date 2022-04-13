@@ -31,6 +31,7 @@
     "@actions/github": "^5.0.1",
     "@types/fs-extra": "^9.0.13",
     "axios": "^0.26.1",
+    "dotenv": "^16.0.0",
     "fast-glob": "^3.2.11",
     "fs-extra": "^10.0.1",
     "gray-matter": "^4.0.3"

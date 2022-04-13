@@ -6,13 +6,27 @@ inputs:
     required: true
     description: 'articles files location'
     default: 'posts/**/*.md'
+  dry_run:
+    required: true
+    description: 'post articles to the blogs and update local files'
+    default: 'true'
   publish:
     required: true
-    description: 'publish articles by default'
+    description: 'releses articles to the public by default'
     default: 'false'
   devto_api_key:
     required: true
-    description: 'author dev to api key'
+    description: 'author dev.to api key'
+  medium_api_key:
+    required: true
+    description: 'author medium api key'
+  devto_org_id:
+    required: true
+    description: 'dev.to org id'
+  medium_blog_id:
+    required: true
+    description: 'medium blog id'
+
 runs:
   using: 'node16'
   main: 'dist/index.js'

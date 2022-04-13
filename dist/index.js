@@ -49,7 +49,7 @@ const Articles = {
     getArticles: (filesGlob) => __awaiter(void 0, void 0, void 0, function* () {
         const entries = fg.sync(filesGlob, { dot: true });
         const articles = yield Promise.all(entries.map(Articles.getArticleContentsFromFile));
-        return articles.filter(article => article !== null && !article.file.includes(`[dev]`));
+        return articles.filter(article => article !== null);
     }),
     getArticleContentsFromFile: (file) => __awaiter(void 0, void 0, void 0, function* () {
         const content = yield fs_extra_1.default.readFile(file, 'utf-8');
@@ -59,17 +59,6 @@ const Articles = {
             return null;
         }
         return Object.assign({ file }, article);
-    }),
-    getdevToPostedArticleFile: (allArticlesFiles, postedArticleResult) => __awaiter(void 0, void 0, void 0, function* () {
-        const postedArticlesFileNames = allArticlesFiles.filter(function (articleFileData) {
-            return postedArticleResult.some(function (postResponseData) {
-                return (articleFileData === null || articleFileData === void 0 ? void 0 : articleFileData.data.title) === postResponseData.title;
-            });
-        });
-        if (postedArticlesFileNames) {
-            return postedArticlesFileNames.map(files => files === null || files === void 0 ? void 0 : files.file);
-        }
-        return null;
     }),
     updatedPostedArticlesFileNames: (postedArticlesPath, newFileNamePrefix) => __awaiter(void 0, void 0, void 0, function* () {
         return yield Promise.all(postedArticlesPath.map((postedPathName) => __awaiter(void 0, void 0, void 0, function* () {
@@ -91,39 +80,15 @@ exports["default"] = Articles;
 /***/ }),
 
 /***/ 88:
-/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+/***/ ((__unused_webpack_module, exports) => {
 
 "use strict";
 
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    var desc = Object.getOwnPropertyDescriptor(m, k);
-    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-      desc = { enumerable: true, get: function() { return m[k]; } };
-    }
-    Object.defineProperty(o, k2, desc);
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.GlobalConfig = void 0;
-const core = __importStar(__nccwpck_require__(2186));
 exports.GlobalConfig = {
-    something: core.getInput('something'),
-    devToBaseURL: 'https://dev.to/api/articles'
+    devToBaseURL: 'https://dev.to/api/articles',
+    mediumBaseURL: 'https://api.medium.com/v1'
 };
 
 
@@ -170,9 +135,19 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.sampleDevToPostResponse = void 0;
 const config_1 = __nccwpck_require__(88);
 const axios_1 = __importDefault(__nccwpck_require__(6545));
 const core = __importStar(__nccwpck_require__(2186));
+const article_1 = __importDefault(__nccwpck_require__(1092));
+exports.sampleDevToPostResponse = {
+    type_of: 'article',
+    id: 1050512,
+    title: 'Test Three',
+    description: 'Senora Bonita   🍻 🍻 🍻 🍻 🍻',
+    readable_publish_date: null,
+    updated_article_file_name: 'post/path/to/devto-post.md'
+};
 const devTo = {
     postToDevToBlog(articleData) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -182,52 +157,15 @@ const devTo = {
     sendPublishRequest(articleData) {
         var _a;
         return __awaiter(this, void 0, void 0, function* () {
-            core.debug(JSON.stringify(articleData));
+            core.debug(`dev.to article data:: ${JSON.stringify(articleData)}`);
+            if (articleData.config.localFilePath.includes('[dev]')) {
+                core.debug(`Article already posted!`);
+                return;
+            }
+            const devToPrefix = '[dev].';
             if (articleData.config.dryRun) {
-                return {
-                    type_of: 'article',
-                    id: 1050512,
-                    title: 'Test Three',
-                    description: 'Senora Bonita   🍻 🍻 🍻 🍻 🍻',
-                    readable_publish_date: null,
-                    slug: 'test-three-2na-temp-slug-2158217',
-                    path: '/clickpesa/test-three-2na-temp-slug-2158217',
-                    url: 'https://dev.to/clickpesa/test-three-2na-temp-slug-2158217',
-                    comments_count: 0,
-                    public_reactions_count: 0,
-                    collection_id: 17655,
-                    published_timestamp: '',
-                    positive_reactions_count: 0,
-                    cover_image: null,
-                    social_image: 'https://dev.to/social_previews/article/1050512.png',
-                    canonical_url: 'https://www.example.com/posts/lion/using-js-functions-properties',
-                    created_at: '2022-04-10T07:35:18Z',
-                    edited_at: null,
-                    crossposted_at: null,
-                    published_at: null,
-                    last_comment_at: '2017-01-01T05:00:00Z',
-                    reading_time_minutes: 1,
-                    tag_list: 'javascript, functions',
-                    tags: ['javascript', 'functions'],
-                    body_html: '<h2>\n  <a name="senora-bonita" href="#senora-bonita">\n  </a>\n  Senora Bonita\n</h2>\n\n<p>🍻 🍻 🍻 🍻 🍻</p>\n\n',
-                    body_markdown: '\n## Senora Bonita\n\n 🍻 🍻 🍻 🍻 🍻\n',
-                    user: {
-                        name: 'Omar',
-                        username: 'ommyjay',
-                        twitter_username: null,
-                        github_username: 'ommyjay',
-                        website_url: 'https://ommyjay.me',
-                        profile_image: 'https://res.cloudinary.com/practicaldev/image/fetch/s--2CVfF_c6--/c_fill,f_auto,fl_progressive,h_640,q_auto,w_640/https://dev-to-uploads.s3.amazonaws.com/uploads/user/profile_image/244703/6f0c5476-c84d-45ca-b493-fd981346d82f.jpeg',
-                        profile_image_90: 'https://res.cloudinary.com/practicaldev/image/fetch/s--ou19SGrz--/c_fill,f_auto,fl_progressive,h_90,q_auto,w_90/https://dev-to-uploads.s3.amazonaws.com/uploads/user/profile_image/244703/6f0c5476-c84d-45ca-b493-fd981346d82f.jpeg'
-                    },
-                    organization: {
-                        name: 'ClickPesa',
-                        username: 'clickpesa',
-                        slug: 'clickpesa',
-                        profile_image: 'https://res.cloudinary.com/practicaldev/image/fetch/s--yF7Sgr1U--/c_fill,f_auto,fl_progressive,h_640,q_auto,w_640/https://dev-to-uploads.s3.amazonaws.com/uploads/organization/profile_image/5308/13a0af00-4127-4744-9bbc-53c93c961c49.png',
-                        profile_image_90: 'https://res.cloudinary.com/practicaldev/image/fetch/s--KAXR9TOL--/c_fill,f_auto,fl_progressive,h_90,q_auto,w_90/https://dev-to-uploads.s3.amazonaws.com/uploads/organization/profile_image/5308/13a0af00-4127-4744-9bbc-53c93c961c49.png'
-                    }
-                };
+                //await Articles.updatedPostedArticlesFileNames([articleData.config.localFilePath], devToPrefix)
+                return exports.sampleDevToPostResponse;
             }
             try {
                 const { data, status } = yield axios_1.default.post(config_1.GlobalConfig.devToBaseURL, articleData.content, {
@@ -237,16 +175,15 @@ const devTo = {
                     }
                 });
                 core.debug(`response status is:  ${status}`);
-                return data;
+                yield article_1.default.updatedPostedArticlesFileNames([articleData.config.localFilePath], devToPrefix);
+                return Object.assign(Object.assign({}, data), { updated_article_file_name: articleData.config.localFilePath });
             }
             catch (error) {
                 if (axios_1.default.isAxiosError(error)) {
                     core.debug(`error message:  ${(_a = error.response) === null || _a === void 0 ? void 0 : _a.data}`);
-                    return error.message;
                 }
                 else {
                     core.debug(`unexpected error: ${error}`);
-                    return 'An unexpected error occurred';
                 }
             }
         });
@@ -302,6 +239,7 @@ const core = __importStar(__nccwpck_require__(2186));
 //import * as github from '@actions/github'
 const article_1 = __importDefault(__nccwpck_require__(1092));
 const devto_1 = __importDefault(__nccwpck_require__(790));
+const medium_1 = __importDefault(__nccwpck_require__(2355));
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
@@ -309,11 +247,17 @@ function run() {
             //const payload = JSON.stringify(github.context.payload, undefined, 2)
             // core.debug(`The event payload: ${payload}`)
             const devtoKey = core.getInput('devto_api_key');
-            const articlesFileLocation = core.getInput('files_location');
+            const devtoOrgId = core.getInput('devto_org_id');
+            const mediumBlogId = core.getInput('medium_blog_id');
+            const mediumKey = core.getInput('medium_api_key');
+            const dryRun = core.getInput('dry_run') === 'true';
+            const publish = core.getInput('publish') === 'true';
             core.setSecret(devtoKey);
-            const articlesFiles = yield article_1.default.getArticles(articlesFileLocation);
-            core.setOutput('formated_articles', articlesFiles[0]);
-            const postToDevToBlogResponse = yield Promise.all(articlesFiles.map((article) => __awaiter(this, void 0, void 0, function* () {
+            core.setSecret(devtoOrgId);
+            core.setSecret(mediumKey);
+            core.setSecret(mediumBlogId);
+            const { devToArticles } = yield getDevToArticles();
+            const postToDevToBlogResponse = yield Promise.all(devToArticles.map((article) => __awaiter(this, void 0, void 0, function* () {
                 const devToArticleData = {
                     content: {
                         article: {
@@ -321,25 +265,38 @@ function run() {
                             body_markdown: (article === null || article === void 0 ? void 0 : article.content) || '# Hello World',
                             tags: (article === null || article === void 0 ? void 0 : article.data.tags) || [],
                             canonical_url: (article === null || article === void 0 ? void 0 : article.data.canonical_url) || '',
-                            published: core.getInput('publish'),
-                            series: (article === null || article === void 0 ? void 0 : article.data.series) || '',
-                            organization_id: (article === null || article === void 0 ? void 0 : article.data.organization_id) || ''
+                            published: publish ? 'true' : 'false',
+                            series: (article === null || article === void 0 ? void 0 : article.data.series) || ''
                         }
                     },
                     config: {
+                        organization_id: devtoOrgId,
                         devtoKey,
-                        dryRun: true
+                        dryRun,
+                        localFilePath: (article === null || article === void 0 ? void 0 : article.file) || ''
                     }
                 };
                 return devto_1.default.postToDevToBlog(devToArticleData);
             })));
-            // core.debug(`Output result_json: ${postToDevToBlogResponse}`)
-            const postedFileNames = (yield article_1.default.getdevToPostedArticleFile(articlesFiles, postToDevToBlogResponse));
-            const devToPrefix = '[dev].';
-            const updatedPoestedArticlesFilePaths = yield article_1.default.updatedPostedArticlesFileNames(postedFileNames, devToPrefix);
-            core.setOutput('posted_files', postedFileNames);
-            core.setOutput('updated_posted_article_file_paths', updatedPoestedArticlesFilePaths);
-            core.setOutput('post_to_devto_blog_response', postToDevToBlogResponse);
+            const { mediumArticles } = yield getMediumArticles();
+            const postMediumBlogResponse = yield Promise.all(mediumArticles.map((article) => __awaiter(this, void 0, void 0, function* () {
+                const mediumArticleData = {
+                    content: Object.assign({ title: (article === null || article === void 0 ? void 0 : article.data.title) || '# Hello', contentFormat: 'markdown', content: (article === null || article === void 0 ? void 0 : article.content) || '# Hello World', canonicalUrl: (article === null || article === void 0 ? void 0 : article.data.canonical_url) || '', tags: (article === null || article === void 0 ? void 0 : article.data.tags) || [] }, (!publish && { publishStatus: 'draft' })),
+                    config: {
+                        mediumBlogId,
+                        mediumKey,
+                        dryRun,
+                        localFilePath: (article === null || article === void 0 ? void 0 : article.file) || ''
+                    }
+                };
+                return medium_1.default.postToMediumBlog(mediumArticleData);
+            })));
+            core.debug(`post_to_devto_blog_response:: ${JSON.stringify(postToDevToBlogResponse, undefined, 2)}`);
+            core.debug(`post_to_medium_blog_response:: ${JSON.stringify(postMediumBlogResponse, undefined, 2)}`);
+            core.setOutput('posted_articles', [
+                ...postToDevToBlogResponse.map(article => article === null || article === void 0 ? void 0 : article.updated_article_file_name),
+                ...postMediumBlogResponse.map(article => article === null || article === void 0 ? void 0 : article.updated_article_file_name)
+            ].join(', '));
         }
         catch (error) {
             if (error instanceof Error)
@@ -348,6 +305,130 @@ function run() {
     });
 }
 run();
+function getDevToArticles() {
+    return __awaiter(this, void 0, void 0, function* () {
+        const articlesFileLocation = core.getInput('files_location');
+        const articlesFiles = yield article_1.default.getArticles(articlesFileLocation);
+        const devToArticles = articlesFiles.filter(articles => articles === null || articles === void 0 ? void 0 : articles.data.publish_to.includes('dev'));
+        return { devToArticles };
+    });
+}
+function getMediumArticles() {
+    return __awaiter(this, void 0, void 0, function* () {
+        const articlesFileLocation = core.getInput('files_location');
+        const articlesFiles = yield article_1.default.getArticles(articlesFileLocation);
+        const mediumArticles = articlesFiles.filter(articles => articles === null || articles === void 0 ? void 0 : articles.data.publish_to.includes('medium'));
+        return { mediumArticles };
+    });
+}
+
+
+/***/ }),
+
+/***/ 2355:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.sampleMediumPostResponse = void 0;
+const config_1 = __nccwpck_require__(88);
+const axios_1 = __importDefault(__nccwpck_require__(6545));
+const core = __importStar(__nccwpck_require__(2186));
+const article_1 = __importDefault(__nccwpck_require__(1092));
+exports.sampleMediumPostResponse = {
+    data: {
+        id: '317116d9947f',
+        title: 'Test Three',
+        authorId: '1198cea4d9ca7484cd12381ef06e',
+        url: 'https://medium.com/@ommyjay/using-js-functions-properties-in-real-life-317116d9947f',
+        canonicalUrl: 'https://ommyjay.me/blog/using-js-functions-properties-in-real-life',
+        publishStatus: '',
+        publishedAt: 1648551241873,
+        license: '',
+        licenseUrl: 'https://policy.medium.com/medium-terms-of-service-9db0094a1e0f',
+        tags: ['function', 'property', 'javascript'],
+        publicationId: 'publication_Id'
+    },
+    updated_article_file_name: 'post/path/to/medium-post.md'
+};
+const Medium = {
+    postToMediumBlog(articleData) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield Medium.sendPublishRequest(articleData);
+        });
+    },
+    sendPublishRequest(articleData) {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (articleData.config.localFilePath.includes('[medium]')) {
+                core.debug(`Article already posted!`);
+                return;
+            }
+            core.debug(`medium article data:: ${JSON.stringify(articleData)}`);
+            const mediumPrefix = '[medium].';
+            if (articleData.config.dryRun) {
+                core.debug(articleData.config.localFilePath);
+                //await Articles.updatedPostedArticlesFileNames([articleData.config.localFilePath], mediumPrefix)
+                return exports.sampleMediumPostResponse;
+            }
+            try {
+                const { data, status } = yield axios_1.default.post(`${config_1.GlobalConfig.mediumBaseURL}/publications/${articleData.config.mediumBlogId}/posts`, articleData.content, {
+                    headers: {
+                        Authorization: `Bearer ${articleData.config.mediumKey}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+                core.debug(`response status is:  ${status}`);
+                yield article_1.default.updatedPostedArticlesFileNames([articleData.config.localFilePath], mediumPrefix);
+                return Object.assign(Object.assign({}, data), { updated_article_file_name: articleData.config.localFilePath });
+            }
+            catch (error) {
+                if (axios_1.default.isAxiosError(error)) {
+                    core.debug(`error message:  ${error.message}`);
+                }
+                else {
+                    core.debug(`unexpected error: ${error}`);
+                }
+            }
+        });
+    }
+};
+exports["default"] = Medium;
 
 
 /***/ }),

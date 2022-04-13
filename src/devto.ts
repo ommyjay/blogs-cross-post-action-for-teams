@@ -1,7 +1,7 @@
 import {GlobalConfig} from './config'
 import axios from 'axios'
 import * as core from '@actions/core'
-
+import Articles from './article'
 export type DevToArticleData = {
   content: {
     article: {
@@ -11,19 +11,14 @@ export type DevToArticleData = {
       canonical_url: string
       published: string
       series: string
-      organization_id: string
     }
   }
   config: {
     devtoKey: string
     dryRun: boolean
+    localFilePath: string
+    organization_id: string
   }
-}
-type DevTo = {
-  // eslint-disable-next-line  @typescript-eslint/no-explicit-any
-  postToDevToBlog(articleData: DevToArticleData): Promise<any>
-  // eslint-disable-next-line  @typescript-eslint/no-explicit-any
-  sendPublishRequest(articleData: DevToArticleData): Promise<any>
 }
 
 type User = {
@@ -43,7 +38,8 @@ type Organization = {
   profile_image: string
   profile_image_90: string
 }
-export type PostToDevToBlogResponse = {
+
+export type PostToDevToBlogResponseType = {
   type_of: string
   id: number
   title: string
@@ -72,68 +68,49 @@ export type PostToDevToBlogResponse = {
   body_markdown: string
   user: User
   organization: Organization
+  updated_article_file_name: string
 }
-const devTo: DevTo = {
-  async postToDevToBlog(articleData: DevToArticleData): Promise<string> {
+
+type DevToType = {
+  postToDevToBlog(
+    articleData: DevToArticleData
+  ): Promise<PostToDevToBlogResponseType | undefined>
+  sendPublishRequest(
+    articleData: DevToArticleData
+  ): Promise<PostToDevToBlogResponseType | undefined>
+}
+
+export const sampleDevToPostResponse = {
+  type_of: 'article',
+  id: 1050512,
+  title: 'Test Three',
+  description: 'Senora Bonita   🍻 🍻 🍻 🍻 🍻',
+  readable_publish_date: null,
+  updated_article_file_name: 'post/path/to/devto-post.md'
+}
+const devTo: DevToType = {
+  async postToDevToBlog(
+    articleData: DevToArticleData
+  ): Promise<PostToDevToBlogResponseType | undefined> {
     return await devTo.sendPublishRequest(articleData)
   },
   async sendPublishRequest(articleData: DevToArticleData) {
-    core.debug(JSON.stringify(articleData))
+    core.debug(`dev.to article data:: ${JSON.stringify(articleData)}`)
+
+    if (articleData.config.localFilePath.includes('[dev]')) {
+      core.debug(`Article already posted!`)
+      return
+    }
+
+    const devToPrefix = '[dev].'
+
     if (articleData.config.dryRun) {
-      return {
-        type_of: 'article',
-        id: 1050512,
-        title: 'Test Three',
-        description: 'Senora Bonita   🍻 🍻 🍻 🍻 🍻',
-        readable_publish_date: null,
-        slug: 'test-three-2na-temp-slug-2158217',
-        path: '/clickpesa/test-three-2na-temp-slug-2158217',
-        url: 'https://dev.to/clickpesa/test-three-2na-temp-slug-2158217',
-        comments_count: 0,
-        public_reactions_count: 0,
-        collection_id: 17655,
-        published_timestamp: '',
-        positive_reactions_count: 0,
-        cover_image: null,
-        social_image: 'https://dev.to/social_previews/article/1050512.png',
-        canonical_url:
-          'https://www.example.com/posts/lion/using-js-functions-properties',
-        created_at: '2022-04-10T07:35:18Z',
-        edited_at: null,
-        crossposted_at: null,
-        published_at: null,
-        last_comment_at: '2017-01-01T05:00:00Z',
-        reading_time_minutes: 1,
-        tag_list: 'javascript, functions',
-        tags: ['javascript', 'functions'],
-        body_html:
-          '<h2>\n  <a name="senora-bonita" href="#senora-bonita">\n  </a>\n  Senora Bonita\n</h2>\n\n<p>🍻 🍻 🍻 🍻 🍻</p>\n\n',
-        body_markdown: '\n## Senora Bonita\n\n 🍻 🍻 🍻 🍻 🍻\n',
-        user: {
-          name: 'Omar',
-          username: 'ommyjay',
-          twitter_username: null,
-          github_username: 'ommyjay',
-          website_url: 'https://ommyjay.me',
-          profile_image:
-            'https://res.cloudinary.com/practicaldev/image/fetch/s--2CVfF_c6--/c_fill,f_auto,fl_progressive,h_640,q_auto,w_640/https://dev-to-uploads.s3.amazonaws.com/uploads/user/profile_image/244703/6f0c5476-c84d-45ca-b493-fd981346d82f.jpeg',
-          profile_image_90:
-            'https://res.cloudinary.com/practicaldev/image/fetch/s--ou19SGrz--/c_fill,f_auto,fl_progressive,h_90,q_auto,w_90/https://dev-to-uploads.s3.amazonaws.com/uploads/user/profile_image/244703/6f0c5476-c84d-45ca-b493-fd981346d82f.jpeg'
-        },
-        organization: {
-          name: 'ClickPesa',
-          username: 'clickpesa',
-          slug: 'clickpesa',
-          profile_image:
-            'https://res.cloudinary.com/practicaldev/image/fetch/s--yF7Sgr1U--/c_fill,f_auto,fl_progressive,h_640,q_auto,w_640/https://dev-to-uploads.s3.amazonaws.com/uploads/organization/profile_image/5308/13a0af00-4127-4744-9bbc-53c93c961c49.png',
-          profile_image_90:
-            'https://res.cloudinary.com/practicaldev/image/fetch/s--KAXR9TOL--/c_fill,f_auto,fl_progressive,h_90,q_auto,w_90/https://dev-to-uploads.s3.amazonaws.com/uploads/organization/profile_image/5308/13a0af00-4127-4744-9bbc-53c93c961c49.png'
-        }
-      }
+      //await Articles.updatedPostedArticlesFileNames([articleData.config.localFilePath], devToPrefix)
+      return sampleDevToPostResponse as PostToDevToBlogResponseType
     }
 
     try {
-      const {data, status} = await axios.post<PostToDevToBlogResponse>(
+      const {data, status} = await axios.post<PostToDevToBlogResponseType>(
         GlobalConfig.devToBaseURL,
         articleData.content,
         {
@@ -144,14 +121,19 @@ const devTo: DevTo = {
         }
       )
       core.debug(`response status is:  ${status}`)
-      return data
+      await Articles.updatedPostedArticlesFileNames(
+        [articleData.config.localFilePath],
+        devToPrefix
+      )
+      return {
+        ...data,
+        updated_article_file_name: articleData.config.localFilePath
+      }
     } catch (error) {
       if (axios.isAxiosError(error)) {
         core.debug(`error message:  ${error.response?.data}`)
-        return error.message
       } else {
         core.debug(`unexpected error: ${error}`)
-        return 'An unexpected error occurred'
       }
     }
   }
