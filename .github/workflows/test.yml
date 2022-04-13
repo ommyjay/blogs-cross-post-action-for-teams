@@ -24,7 +24,7 @@ jobs:
         id: cross_post
         with:
           files_location: 'posts/**/*.md'
-          dry_run: 'false'
+          dry_run: 'true'
           publish: 'false'
           devto_api_key: ${{ secrets.DEVTO_API_KEY }}
           medium_api_key: ${{ secrets.MEDIUM_API_KEY }}
