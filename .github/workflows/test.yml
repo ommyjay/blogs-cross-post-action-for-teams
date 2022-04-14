@@ -21,7 +21,7 @@ jobs:
     steps:
       - uses: dopplerhq/cli-action@v1
 
-      - run: doppler secrets get DEVTO_API_KEY MEDIUM_API_KEY --plain
+      - run: doppler run -- printenv | grep DOPPLER
         env:
           DOPPLER_TOKEN: ${{ secrets.DOPPLER_TOKEN }}
 
