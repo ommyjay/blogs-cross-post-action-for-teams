@@ -33,12 +33,12 @@ jobs:
           files_location: 'posts/**/*.md'
           dry_run: 'true'
           publish: 'false'
-          devto_api_key: ${{ secrets.DEVTO_API_KEY }}
-          medium_api_key: ${{ secrets.MEDIUM_API_KEY }}
-          devto_org_id: ${{ secrets.DEVTO_ORG_ID }}
-          medium_blog_id: ${{ secrets.MEDIUM_BLOG_ID}}
-          hashnode_api_key: ${{ secrets.HASHNODE_API_KEY }}
-          hashnode_blog_id: ${{ secrets.HASHNODE_BLOG_ID }}
+          devto_api_key: ${{ doppler secrets get DEVTO_API_KEY }}
+          medium_api_key: ${{ doppler secrets get MEDIUM_API_KEY }}
+          devto_org_id: ${{ doppler secrets get DEVTO_ORG_ID }}
+          medium_blog_id: ${{ doppler secrets get MEDIUM_BLOG_ID}}
+          hashnode_api_key: ${{ doppler secrets get HASHNODE_API_KEY }}
+          hashnode_blog_id: ${{ doppler secrets get HASHNODE_BLOG_ID }}
 
       - name: Clean up changed files
         run: git rm `git ls-files --deleted` || exit 0;
