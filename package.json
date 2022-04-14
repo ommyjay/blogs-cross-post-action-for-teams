@@ -10,9 +10,9 @@
     "format-check": "prettier --check '**/*.ts'",
     "lint": "eslint src/**/*.ts",
     "package": "ncc build --source-map --license licenses.txt",
-    "test": "jest",
-    "test-main": "yarn build && yarn test -t 'main'",
-    "all": "yarn build && yarn format && yarn lint && yarn package && yarn test",
+    "test": "doppler run -- jest",
+    "test-main": "doppler run -- yarn build && yarn test -t 'main'",
+    "all": "doppler run -- yarn build && yarn format && yarn lint && yarn package && yarn test",
     "release": ". release.sh"
   },
   "repository": {
@@ -31,7 +31,6 @@
     "@actions/github": "^5.0.1",
     "@types/fs-extra": "^9.0.13",
     "axios": "^0.26.1",
-    "dotenv": "^16.0.0",
     "fast-glob": "^3.2.11",
     "fs-extra": "^10.0.1",
     "gray-matter": "^4.0.3"
