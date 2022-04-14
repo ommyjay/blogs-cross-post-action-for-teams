@@ -21,7 +21,7 @@ jobs:
     steps:
       - uses: dopplerhq/cli-action@v1
 
-      - run: doppler secrets get DOPPLER_PROJECT DOPPLER_CONFIG --plain
+      - run: doppler secrets get DEVTO_API_KEY MEDIUM_API_KEY --plain
         env:
           DOPPLER_TOKEN: ${{ secrets.DOPPLER_TOKEN }}
 
