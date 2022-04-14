@@ -20,11 +20,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: dopplerhq/cli-action@v1
-      - run: doppler secrets --only-names
+
+      - run: doppler secrets get engineering-blog main_omar --json
         env:
           DOPPLER_TOKEN: ${{ secrets.DOPPLER_TOKEN }}
 
       - uses: actions/checkout@v3
+
       - uses: ./
         id: cross_post
         with:
