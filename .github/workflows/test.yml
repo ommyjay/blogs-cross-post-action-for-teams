@@ -21,7 +21,7 @@ jobs:
     steps:
       - uses: dopplerhq/cli-action@v1
 
-      - run: doppler secrets get DOPPLER_PROJECT DOPPLER_CONFIG --json
+      - run: doppler secrets get DOPPLER_PROJECT DOPPLER_CONFIG --plain
         env:
           DOPPLER_TOKEN: ${{ secrets.DOPPLER_TOKEN }}
 
