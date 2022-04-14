@@ -16,18 +16,14 @@ jobs:
           yarn
       - run: |
           yarn all
-
   test: # make sure the action works on a clean machine without building
     runs-on: ubuntu-latest
     steps:
-      - name: Install Doppler CLI
-        uses: dopplerhq/cli-action@v1
-      - name: Do something with the CLI
-        run: doppler secrets --only-names
+      - uses: dopplerhq/cli-action@v1
+      - run: doppler secrets --only-names
         env:
           DOPPLER_TOKEN: ${{ secrets.DOPPLER_TOKEN }}
 
-      - name: Post Articles
       - uses: actions/checkout@v3
       - uses: ./
         id: cross_post
