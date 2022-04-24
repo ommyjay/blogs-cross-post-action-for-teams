@@ -23,7 +23,7 @@ jobs:
 
       - run: |
           doppler run -- printenv | grep DOPPLER
-          echo ${{ DEVTO_API_KEY }}
+          echo ${{ env.DEVTO_API_KEY }}
         env:
           DOPPLER_TOKEN: ${{ secrets.DOPPLER_TOKEN }}
 
