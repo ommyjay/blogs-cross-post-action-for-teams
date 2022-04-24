@@ -23,7 +23,7 @@ jobs:
 
       - run: |
           doppler run -- printenv | grep DOPPLER
-          echo "DEVTO_API_KEY=doppler secrets get DEVTO_API_KEY --plain" >> $GITHUB_ENV
+          echo "DEVTO_API_KEY=$(doppler secrets get DEVTO_API_KEY --plain)" >> $GITHUB_ENV
         env:
           DOPPLER_TOKEN: ${{ secrets.DOPPLER_TOKEN }}
       - uses: actions/checkout@v3
