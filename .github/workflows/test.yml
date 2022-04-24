@@ -20,7 +20,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: dopplerhq/cli-action@v1
-      - name: Set doppler variables
+
       - run: |
           doppler run -- printenv | grep DOPPLER
           echo "DEVTO_API_KEY=$(doppler secrets get DEVTO_API_KEY --plain)" >> $GITHUB_ENV
@@ -31,6 +31,7 @@ jobs:
           echo "HASHNODE_BLOG_ID=$(doppler secrets get HASHNODE_BLOG_ID --plain)" >> $GITHUB_ENV
         env:
           DOPPLER_TOKEN: ${{ secrets.DOPPLER_TOKEN }}
+
       - uses: actions/checkout@v3
 
       - uses: ./
