@@ -32,7 +32,6 @@ jobs:
         env:
           DOPPLER_TOKEN: ${{ secrets.DOPPLER_TOKEN }}
       - uses: actions/checkout@v3
-      - name: Cross post articles
       - uses: ./
         id: cross_post
         with:
