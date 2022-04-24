@@ -19,9 +19,9 @@ jobs:
   test: # make sure the action works on a clean machine without building
     runs-on: ubuntu-latest
     steps:
-      - name: Setup doppler CLI
+      - name: Set up doppler CLI
         uses: dopplerhq/cli-action@v1
-      - name: Set env variables from doppler
+      - name: Set up env variables from doppler
         run: |
           doppler run -- printenv | grep DOPPLER
           echo "DEVTO_API_KEY=$(doppler secrets get DEVTO_API_KEY --plain)" >> $GITHUB_ENV
@@ -49,7 +49,7 @@ jobs:
           hashnode_blog_id: ${{ env.HASHNODE_BLOG_ID }}
       - name: Clean up changed files
         run: git rm `git ls-files --deleted` || exit 0;
-      - name: Commit new files
+      - name: Commit updated new files
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
           commit_message: '⚙️ AUTOMATED: Add posted articles files ${{ steps.cross_post.outputs.posted_articles }}'
