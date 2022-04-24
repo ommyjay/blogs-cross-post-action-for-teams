@@ -30,6 +30,7 @@ jobs:
           echo "MEDIUM_BLOG_ID=$(doppler secrets get MEDIUM_BLOG_ID --plain)" >> $GITHUB_ENV
           echo "HASHNODE_API_KEY=$(doppler secrets get HASHNODE_API_KEY --plain)" >> $GITHUB_ENV
           echo "HASHNODE_BLOG_ID=$(doppler secrets get HASHNODE_BLOG_ID --plain)" >> $GITHUB_ENV
+          echo $GITHUB_ACTOR
         env:
           DOPPLER_TOKEN: ${{ secrets.DOPPLER_TOKEN }}
       - name: Checkout Repository
