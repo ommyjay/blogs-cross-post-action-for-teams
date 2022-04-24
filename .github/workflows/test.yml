@@ -19,7 +19,8 @@ jobs:
   test: # make sure the action works on a clean machine without building
     runs-on: ubuntu-latest
     steps:
-      - uses: dopplerhq/cli-action@v1
+      - name: Setup doppler CLI
+        uses: dopplerhq/cli-action@v1
 
       - name: Set doppler variables
         run: |
