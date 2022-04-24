@@ -23,9 +23,9 @@ jobs:
 
       - run: |
           doppler run -- printenv | grep DOPPLER
+          echo "DEVTO_API_KEY=doppler secrets get DEVTO_API_KEY --plain" >> $GITHUB_ENV
         env:
           DOPPLER_TOKEN: ${{ secrets.DOPPLER_TOKEN }}
-
       - uses: actions/checkout@v3
 
       - uses: ./
@@ -34,7 +34,7 @@ jobs:
           files_location: 'posts/**/*.md'
           dry_run: 'true'
           publish: 'false'
-          devto_api_key: ${{ doppler secrets get DEVTO_API_KEY --plain }}
+          devto_api_key: ${{ env.DEVTO_API_KEY }}
           medium_api_key: ${{ env.MEDIUM_API_KEY }}
           devto_org_id: ${{ env.DEVTO_ORG_ID }}
           medium_blog_id: ${{ env.MEDIUM_BLOG_ID}}
