@@ -21,12 +21,13 @@ jobs:
     steps:
       - uses: dopplerhq/cli-action@v1
 
-      - run: |
+      - name: Set doppler variables
+        run: |
           doppler run -- printenv | grep DOPPLER
           echo "DEVTO_API_KEY=$(doppler secrets get DEVTO_API_KEY --plain)" >> $GITHUB_ENV
+          echo "DEVTO_ORG_ID=$(doppler secrets get DEVTO_ORG_ID --plain)" >> $GITHUB_ENV
           echo "MEDIUM_API_KEY=$(doppler secrets get MEDIUM_API_KEY --plain)" >> $GITHUB_ENV
           echo "MEDIUM_BLOG_ID=$(doppler secrets get MEDIUM_BLOG_ID --plain)" >> $GITHUB_ENV
-          echo "DEVTO_ORG_ID=$(doppler secrets get DEVTO_ORG_ID --plain)" >> $GITHUB_ENV
           echo "HASHNODE_API_KEY=$(doppler secrets get HASHNODE_API_KEY --plain)" >> $GITHUB_ENV
           echo "HASHNODE_BLOG_ID=$(doppler secrets get HASHNODE_BLOG_ID --plain)" >> $GITHUB_ENV
         env:
