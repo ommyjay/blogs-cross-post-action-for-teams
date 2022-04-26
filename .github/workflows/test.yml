@@ -23,7 +23,7 @@ jobs:
         uses: dopplerhq/cli-action@v1
       - name: Set author doppler token name
         run: |
-          dopplerToKenName=$(echo "secrets.${GITHUB_ACTOR}_DOPPLER_TOKEN" | tr '[:lower:]' '[:upper:]')
+          dopplerToKenName=$(echo "${GITHUB_ACTOR}_DOPPLER_TOKEN" | tr '[:lower:]' '[:upper:]')
           echo $dopplerToKenName
           echo "DOPPLER_TOKEN=$(echo "${{$dopplerToKenName}}")" >> $GITHUB_ENV
       - name: Set up env variables from doppler
@@ -37,7 +37,7 @@ jobs:
           echo "HASHNODE_BLOG_ID=$(doppler secrets get HASHNODE_BLOG_ID --plain)" >> $GITHUB_ENV
           echo $GITHUB_ACTOR''
         env:
-          DOPPLER_TOKEN: ${{ env.DOPPLER_TOKEN }}
+          DOPPLER_TOKEN: ${{ secrets.DOPPLER_TOKEN }}
       - name: Checkout Repository
         uses: actions/checkout@v3
       - name: Cross post articles
