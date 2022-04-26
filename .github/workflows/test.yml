@@ -16,12 +16,17 @@ jobs:
           yarn
       - run: |
           yarn all
+
   test: # make sure the action works on a clean machine without building
     runs-on: ubuntu-latest
     steps:
       - name: Set up doppler CLI
         uses: dopplerhq/cli-action@v1
-      - name: Set up env variables from doppler
+      - name: Set up author doppler token env variable
+        run: |
+          dopplerToKenName=$(echo "${GITHUB_ACTOR}_DOPPLER_TOKEN" | tr '[:lower:]' '[:upper:]')
+          echo "DOPPLER_TOKEN=$dopplerToKenName" >> $GITHUB_ENV
+      - name: Set up cross-post env variables from doppler
         run: |
           doppler run -- printenv | grep DOPPLER
           echo "DEVTO_API_KEY=$(doppler secrets get DEVTO_API_KEY --plain)" >> $GITHUB_ENV
@@ -31,7 +36,7 @@ jobs:
           echo "HASHNODE_API_KEY=$(doppler secrets get HASHNODE_API_KEY --plain)" >> $GITHUB_ENV
           echo "HASHNODE_BLOG_ID=$(doppler secrets get HASHNODE_BLOG_ID --plain)" >> $GITHUB_ENV
         env:
-          DOPPLER_TOKEN: ${{ secrets.DOPPLER_TOKEN }}
+          DOPPLER_TOKEN: ${{ secrets[env.DOPPLER_TOKEN] }}
       - name: Checkout Repository
         uses: actions/checkout@v3
       - name: Cross post articles
