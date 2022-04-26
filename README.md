@@ -9,7 +9,7 @@ $ yarn
 ...
 ```
 
-## Build and Test :heavy_check_mark:
+## Build and Test ✔️
 
 ```bash
 $ yarn all
