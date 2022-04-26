@@ -37,7 +37,7 @@ jobs:
           echo "HASHNODE_BLOG_ID=$(doppler secrets get HASHNODE_BLOG_ID --plain)" >> $GITHUB_ENV
           echo $GITHUB_ACTOR''
         env:
-          DOPPLER_TOKEN: ${{ secrets[env.DOPPLER_TOKEN] }}
+          DOPPLER_TOKEN: ${{ secrets.env.DOPPLER_TOKEN }}
       - name: Checkout Repository
         uses: actions/checkout@v3
       - name: Cross post articles
