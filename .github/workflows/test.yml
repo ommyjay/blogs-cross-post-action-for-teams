@@ -25,7 +25,7 @@ jobs:
         run: |
           dopplerToKenName=$(echo "${GITHUB_ACTOR}_DOPPLER_TOKEN" | tr '[:lower:]' '[:upper:]')
           echo $dopplerToKenName
-          echo "DOPPLER_TOKEN=$(eval "secrets.$dopplerToKenName")" >> $GITHUB_ENV
+          echo "DOPPLER_TOKEN=eval secrets.$dopplerToKenName" >> $GITHUB_ENV
       - name: Set up env variables from doppler
         run: |
           doppler run -- printenv | grep DOPPLER
