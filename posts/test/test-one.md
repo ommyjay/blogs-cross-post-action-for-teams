@@ -10,6 +10,7 @@ series: 'Lion'
 publish_to:
   - dev
   - medium
+  - hashnode
 ---
 
 # Test Two

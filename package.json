@@ -11,7 +11,7 @@
     "lint": "eslint src/**/*.ts",
     "package": "ncc build --source-map --license licenses.txt",
     "test": "jest",
-    "test-main": "doppler run -- yarn build && yarn test -t 'main'",
+    "test-main": "doppler run --command='yarn build && yarn test -t 'main''",
     "all": "yarn build && yarn format && yarn lint && yarn package && yarn test",
     "release": ". release.sh"
   },
