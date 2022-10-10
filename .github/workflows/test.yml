@@ -11,7 +11,7 @@ jobs:
   build: # make sure build/ci work properly
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v3.1.0
       - run: |
           yarn
       - run: |
@@ -38,7 +38,7 @@ jobs:
         env:
           DOPPLER_TOKEN: ${{ secrets[env.DOPPLER_TOKEN] }}
       - name: Checkout Repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v3.1.0
       - name: Cross post articles
         uses: ./
         id: cross_post
