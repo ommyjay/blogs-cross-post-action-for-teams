@@ -21,7 +21,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Set up doppler CLI
-        uses: dopplerhq/cli-action@v1
+        uses: dopplerhq/cli-action@v2
       - name: Set up author doppler token env variable
         run: |
           dopplerToKenName=$(echo "${GITHUB_ACTOR}_DOPPLER_TOKEN" | tr '[:lower:]' '[:upper:]')
